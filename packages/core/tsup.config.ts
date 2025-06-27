@@ -10,11 +10,11 @@ export default defineConfig({
   bundle: true,
   sourcemap: 'inline',
   noExternal: Object.keys(pkg.dependencies ?? {}).filter(name =>
-    name.startsWith('@next-devtools'),
+    name.startsWith('@next-dev-tools'),
   ),
   external: [
     ...Object.keys(pkg.dependencies ?? {}).filter(
-      name => !name.startsWith('@next-devtools'),
+      name => !name.startsWith('@next-dev-tools'),
     ),
     ...Object.keys(pkg.peerDependencies ?? {}),
   ],

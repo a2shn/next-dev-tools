@@ -1,1 +1,1 @@
-export * from '@/server/with-next-dev-tools'
+export * from '@/with-next-dev-tools'
