@@ -2,12 +2,12 @@ import { defineConfig } from 'tsup'
 import pkg from './package.json' with { type: 'json' }
 
 export default defineConfig({
-    entry: ['src/index.ts'],
-    format: ['esm', 'cjs'],
-    dts: true,
-    splitting: false,
-    clean: true,
-    bundle: true,
+  entry: ['src/index.ts'],
+  format: ['esm', 'cjs'],
+  dts: true,
+  splitting: false,
+  clean: true,
+  bundle: true,
   sourcemap: 'inline',
   noExternal: Object.keys(pkg.dependencies ?? {}).filter(name =>
     name.startsWith('@next-devtools'),
@@ -19,6 +19,6 @@ export default defineConfig({
     ...Object.keys(pkg.peerDependencies ?? {}),
   ],
   loader: {
-    ".css": "copy"
-  }
+    '.css': 'copy',
+  },
 })

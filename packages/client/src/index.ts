@@ -1,2 +1,3 @@
-import "@/index.css"
-export * from "@/providers/next-dev-tools"
+import '@/index.css'
+
+export * from '@/providers/next-dev-tools'
