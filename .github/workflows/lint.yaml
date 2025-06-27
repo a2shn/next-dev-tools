@@ -7,26 +7,24 @@ on:
     branches: [ "**" ]
 
 jobs:
-  eslint:
-    name: Run ESLint with pnpm
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-
+  lint:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [20]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
+      - uses: actions/checkout@v4
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install
