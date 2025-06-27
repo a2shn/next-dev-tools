@@ -1,3 +1,3 @@
 export default function PageDynamic() {
-  return <div></div>
+  return <div></div>;
 }
