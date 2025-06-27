@@ -1,1 +1,1 @@
-export const WSS_PORT = 8979
+export const WSS_PORT = 8979;
