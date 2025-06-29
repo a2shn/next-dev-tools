@@ -16,12 +16,10 @@
     "test": "vitest run",
     "lint": "eslint . --fix"
   },
-  "peerDependencies": {
-    "next": "^15"
-  },
   "dependencies": {
     "@next-dev-tools/shared": "workspace:*",
     "consola": "^3.4.2",
+    "tinyglobby": "^0.2.14",
     "ws": "^8.18.2"
   },
   "devDependencies": {
@@ -29,7 +27,6 @@
     "@types/node": "^24.0.4",
     "@types/ws": "^8.18.1",
     "eslint": "^9.29.0",
-    "next": "15.3.4",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
