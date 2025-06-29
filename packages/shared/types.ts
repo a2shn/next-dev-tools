@@ -1,12 +1,11 @@
 export interface WebSocketIncomingMessage {
-  type: 'routes';
+  type: 'routes' | 'ping';
   payload: string;
 }
 
-export interface RouteDiscoveryOptions {
-  rootDir?: string;
-  includeApi?: boolean;
-  includeDynamic?: boolean;
+export interface WebSocketOutcomingMessage<T> {
+  success: boolean;
+  payload: T;
 }
 
 export interface RouteInfo {
