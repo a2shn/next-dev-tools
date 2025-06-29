@@ -1,209 +1,133 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import consola from 'consola';
-import '@next-dev-tools/shared/types';
 import type { RouteInfo } from '@next-dev-tools/shared/types';
+import { glob } from 'tinyglobby';
 
-async function discoverAppRoutes(appDir: string): Promise<RouteInfo[]> {
+export async function getRoutes(
+  rootDir: string = process.cwd(),
+): Promise<RouteInfo[]> {
   const routes: RouteInfo[] = [];
+  const extensions = '{js,jsx,ts,tsx}';
 
-  async function traverseAppDirectory(
-    dir: string,
-    routePath = '',
-  ): Promise<void> {
-    try {
-      const entries = await fs.readdir(dir, { withFileTypes: true });
+  const appRouterPatterns = [
+    `${rootDir}/app/**/page.${extensions}`,
+    `${rootDir}/src/app/**/page.${extensions}`,
+    `${rootDir}/app/**/layout.${extensions}`,
+    `${rootDir}/src/app/**/layout.${extensions}`,
+    `${rootDir}/app/**/loading.${extensions}`,
+    `${rootDir}/src/app/**/loading.${extensions}`,
+    `${rootDir}/app/**/error.${extensions}`,
+    `${rootDir}/src/app/**/error.${extensions}`,
+    `${rootDir}/app/**/not-found.${extensions}`,
+    `${rootDir}/src/app/**/not-found.${extensions}`,
+    `${rootDir}/app/**/route.${extensions}`,
+    `${rootDir}/src/app/**/route.${extensions}`,
+    `${rootDir}/app/**/default.${extensions}`,
+    `${rootDir}/src/app/**/default.${extensions}`,
+    `${rootDir}/app/**/template.${extensions}`,
+    `${rootDir}/src/app/**/template.${extensions}`,
+  ];
 
-      for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
+  const pagesRouterPatterns = [
+    `${rootDir}/pages/**/*.${extensions}`,
+    `${rootDir}/src/pages/**/*.${extensions}`,
+  ];
 
-        if (entry.isDirectory()) {
-          if (shouldSkipDirectory(entry.name)) {
-            continue;
-          }
+  const middlewarePatterns = [
+    `${rootDir}/middleware.${extensions}`,
+    `${rootDir}/src/middleware.${extensions}`,
+  ];
 
-          const segmentPath = getRouteSegment(entry.name);
-          const newRoutePath = routePath + segmentPath;
+  for (const pattern of appRouterPatterns) {
+    const files = await glob(pattern, { ignore: ['**/node_modules/**'] });
 
-          if (await hasPageFile(fullPath)) {
-            const routeType = getRouteType(entry.name);
-            routes.push({
-              path: newRoutePath || '/',
-              type: routeType,
-              router: 'app',
-              file: fullPath,
-            });
-          }
+    for (const file of files) {
+      const relativePath = file.replace(rootDir, '').replace(/^\//, '');
+      const segments = relativePath.split('/').filter(Boolean);
+      const filename = segments[segments.length - 1];
+      const routeType = filename.split('.')[0] as RouteInfo['type'];
 
-          if (await hasRouteFile(fullPath)) {
-            const routeType = getRouteType(entry.name);
-            routes.push({
-              path: `/api${newRoutePath}`,
-              type: routeType,
-              router: 'app',
-              file: fullPath,
-            });
-          }
+      const pathSegments = segments.slice(0, -1);
+      const isDynamic = pathSegments.some(
+        (segment) => segment.startsWith('[') && segment.endsWith(']'),
+      );
+      const isParallel = pathSegments.some((segment) =>
+        segment.startsWith('@'),
+      );
+      const isIntercepting = pathSegments.some(
+        (segment) =>
+          segment.startsWith('(.)') ||
+          segment.startsWith('(..)') ||
+          segment.startsWith('(...)') ||
+          segment.startsWith('(....)'),
+      );
+      const isRouteGroup = pathSegments.some(
+        (segment) =>
+          segment.startsWith('(') && segment.endsWith(')') && !isIntercepting,
+      );
 
-          await traverseAppDirectory(fullPath, newRoutePath);
-        }
-      }
-    } catch (error) {
-      consola.warn(`Warning: Could not read directory ${dir}:`, error);
+      routes.push({
+        path: file,
+        type: routeType,
+        router: 'app',
+        isDynamic,
+        isParallel,
+        isIntercepting,
+        isRouteGroup,
+        segments: pathSegments,
+      });
     }
   }
 
-  await traverseAppDirectory(appDir);
-  return routes;
-}
+  for (const pattern of pagesRouterPatterns) {
+    const files = await glob(pattern, { ignore: ['**/node_modules/**'] });
 
-async function discoverPagesRoutes(pagesDir: string): Promise<RouteInfo[]> {
-  const routes: RouteInfo[] = [];
+    for (const file of files) {
+      const relativePath = file.replace(rootDir, '').replace(/^\//, '');
+      const segments = relativePath.split('/').filter(Boolean);
+      const filename = segments[segments.length - 1];
+      const nameWithoutExt = filename.split('.')[0];
 
-  async function traversePagesDirectory(
-    dir: string,
-    routePath = '',
-  ): Promise<void> {
-    try {
-      const entries = await fs.readdir(dir, { withFileTypes: true });
+      let routeType: RouteInfo['type'] = 'page';
 
-      for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
+      if (nameWithoutExt === '_app') routeType = 'app';
+      else if (nameWithoutExt === '_document') routeType = 'document';
+      else if (nameWithoutExt === '_error') routeType = 'custom-error';
+      else if (nameWithoutExt === '404') routeType = '404';
+      else if (nameWithoutExt === '500') routeType = '500';
+      else if (segments.includes('api')) routeType = 'api';
 
-        if (entry.isDirectory()) {
-          if (entry.name === 'api') {
-            continue;
-          }
+      const pathSegments = segments.slice(0, -1);
+      const isDynamic =
+        nameWithoutExt.startsWith('[') && nameWithoutExt.endsWith(']');
 
-          const segmentPath = entry.name === 'api' ? '/api' : `/${entry.name}`;
-          await traversePagesDirectory(fullPath, routePath + segmentPath);
-        } else if (entry.isFile() && isPageFile(entry.name)) {
-          if (routePath.startsWith('/api')) {
-            continue;
-          }
-
-          const fileName = path.parse(entry.name).name;
-          let finalRoutePath: string;
-
-          if (fileName === 'index') {
-            finalRoutePath = routePath || '/';
-          } else {
-            const segmentPath = getRouteSegment(fileName);
-            finalRoutePath = routePath + segmentPath;
-          }
-
-          const routeType = getRouteType(fileName);
-          routes.push({
-            path: finalRoutePath,
-            type: routeType,
-            router: 'pages',
-            file: fullPath,
-          });
-        }
-      }
-    } catch (error) {
-      consola.warn(`Warning: Could not read directory ${dir}:`, error);
+      routes.push({
+        path: file,
+        type: routeType,
+        router: 'pages',
+        isDynamic,
+        isParallel: false,
+        isIntercepting: false,
+        isRouteGroup: false,
+        segments: pathSegments,
+      });
     }
   }
 
-  await traversePagesDirectory(pagesDir);
-  return routes;
-}
+  for (const pattern of middlewarePatterns) {
+    const files = await glob(pattern, { ignore: ['**/node_modules/**'] });
 
-async function directoryExists(dir: string): Promise<boolean> {
-  try {
-    const stat = await fs.stat(dir);
-    return stat.isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-async function hasPageFile(dir: string): Promise<boolean> {
-  try {
-    const entries = await fs.readdir(dir);
-    return entries.some((entry) => /^page\.(js|jsx|ts|tsx)$/.test(entry));
-  } catch {
-    return false;
-  }
-}
-
-async function hasRouteFile(dir: string): Promise<boolean> {
-  try {
-    const entries = await fs.readdir(dir);
-    return entries.some((entry) => /^route\.(js|jsx|ts|tsx)$/.test(entry));
-  } catch {
-    return false;
-  }
-}
-
-function isPageFile(fileName: string): boolean {
-  return (
-    /\.(js|jsx|ts|tsx)$/.test(fileName) &&
-    !fileName.startsWith('_') &&
-    !fileName.startsWith('.')
-  );
-}
-
-function shouldSkipDirectory(dirName: string): boolean {
-  return (
-    dirName.startsWith('_') ||
-    dirName.startsWith('.') ||
-    dirName === 'node_modules' ||
-    dirName === 'components' ||
-    dirName === 'lib' ||
-    dirName === 'utils'
-  );
-}
-
-function getRouteSegment(name: string): string {
-  if (name.startsWith('[[...') && name.endsWith(']]')) {
-    const param = name.slice(5, -2);
-    return `/*${param}`;
-  } else if (name.startsWith('[...') && name.endsWith(']')) {
-    const param = name.slice(4, -1);
-    return `/*${param}`;
-  } else if (name.startsWith('[') && name.endsWith(']')) {
-    const param = name.slice(1, -1);
-    return `/:${param}`;
-  } else {
-    return `/${name}`;
-  }
-}
-
-function getRouteType(name: string): RouteInfo['type'] {
-  if (name.startsWith('[[...') && name.endsWith(']]')) {
-    return 'optional-catch-all';
-  } else if (name.startsWith('[...') && name.endsWith(']')) {
-    return 'catch-all';
-  } else if (name.startsWith('[') && name.endsWith(']')) {
-    return 'dynamic';
-  } else {
-    return 'static';
-  }
-}
-
-export async function getRouteDetails(rootDir: string): Promise<RouteInfo[]> {
-  try {
-    const routes: RouteInfo[] = [];
-
-    const appDir = path.join(rootDir, 'app');
-    if (await directoryExists(appDir)) {
-      const appRoutes = await discoverAppRoutes(appDir);
-      routes.push(...appRoutes);
+    for (const file of files) {
+      routes.push({
+        path: file,
+        type: 'middleware',
+        router: 'app',
+        isDynamic: false,
+        isParallel: false,
+        isIntercepting: false,
+        isRouteGroup: false,
+        segments: [],
+      });
     }
-
-    const pagesDir = path.join(rootDir, 'pages');
-    if (await directoryExists(pagesDir)) {
-      const pageRoutes = await discoverPagesRoutes(pagesDir);
-      routes.push(...pageRoutes);
-    }
-
-    return routes.sort((a, b) => a.path.localeCompare(b.path));
-  } catch (error) {
-    consola.error('Error getting route details:', error);
-    throw new Error(
-      `Failed to get route details: ${error instanceof Error ? error.message : 'Unknown error'}`,
-    );
   }
+
+  return routes.sort((a, b) => a.path.localeCompare(b.path));
 }

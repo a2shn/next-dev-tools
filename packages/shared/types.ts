@@ -10,7 +10,26 @@ export interface OutgoingWsMessage<T> {
 
 export interface RouteInfo {
   path: string;
-  type: 'static' | 'dynamic' | 'catch-all' | 'optional-catch-all';
+  type:
+    | 'page'
+    | 'layout'
+    | 'loading'
+    | 'error'
+    | 'not-found'
+    | 'route'
+    | 'default'
+    | 'template'
+    | 'api'
+    | 'app'
+    | 'document'
+    | 'custom-error'
+    | '404'
+    | '500'
+    | 'middleware';
   router: 'app' | 'pages';
-  file: string;
+  isDynamic: boolean;
+  isParallel: boolean;
+  isIntercepting: boolean;
+  isRouteGroup: boolean;
+  segments: string[];
 }

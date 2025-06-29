@@ -1,98 +1,125 @@
-import { it, expect, beforeEach, afterEach } from 'vitest';
-import { promises as fs } from 'fs';
-import path from 'path';
-import os from 'os';
-import { getRouteDetails } from './get-routes';
+import { it, expect, vi } from 'vitest';
+import { getRoutes } from './get-routes.ts';
+import { glob } from 'tinyglobby';
 
-let tempRoot: string;
-
-beforeEach(async () => {
-  tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'routes-test-'));
+vi.mock('tinyglobby', () => {
+  return {
+    glob: vi.fn(async (patterns: string | string[]) => {
+      const arr = Array.isArray(patterns) ? patterns : [patterns];
+      const matches = mockFiles.filter((f) =>
+        arr.some((pattern) => f.includes(pattern.replace(/^.*/, ''))),
+      );
+      return matches;
+    }),
+  };
 });
 
-afterEach(async () => {
-  await fs.rm(tempRoot, { recursive: true, force: true });
-});
+const mockFiles = [
+  '/project/app/dashboard/page.tsx',
+  '/project/app/(group)/settings/page.tsx',
+  '/project/app/(.)modal/page.tsx',
+  '/project/app/(group)/[slug]/page.tsx',
+  '/project/app/profile/[id]/page.tsx',
+  '/project/app/@parallel/settings/page.tsx',
+  '/project/pages/api/user.ts',
+  '/project/pages/_app.tsx',
+  '/project/pages/_document.tsx',
+  '/project/pages/404.tsx',
+  '/project/pages/500.tsx',
+  '/project/pages/[slug].tsx',
+  '/project/pages/blog/[id]/index.tsx',
+  '/project/middleware.ts',
+];
 
-async function createFile(filePath: string, content = '') {
-  await fs.mkdir(path.dirname(filePath), { recursive: true });
-  await fs.writeFile(filePath, content);
-}
+it('detects app router routes', async () => {
+  const routes = await getRoutes('/project');
 
-it('detects static app routes', async () => {
-  const dir = path.join(tempRoot, 'app', 'home');
-  await createFile(path.join(dir, 'page.tsx'));
-  const routes = await getRouteDetails(tempRoot);
-  expect(routes).toEqual([
-    {
-      path: '/home',
-      type: 'static',
+  expect(glob).toHaveBeenCalled();
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/app/dashboard/page.tsx',
+      type: 'page',
       router: 'app',
-      file: expect.stringContaining(path.join('app', 'home')),
-    },
-  ]);
-});
-
-it('detects dynamic app routes', async () => {
-  const dir = path.join(tempRoot, 'app', '[user]');
-  await createFile(path.join(dir, 'page.jsx'));
-  const routes = await getRouteDetails(tempRoot);
-  expect(routes).toHaveLength(1);
-  expect(routes[0]).toMatchObject({
-    path: '/:user',
-    type: 'dynamic',
-    router: 'app',
-  });
-});
-
-it('detects catch-all and optional catch-all routes', async () => {
-  const catchAll = path.join(tempRoot, 'app', '[...slug]');
-  const optionalCatchAll = path.join(tempRoot, 'app', '[[...all]]');
-  await createFile(path.join(catchAll, 'page.ts'));
-  await createFile(path.join(optionalCatchAll, 'page.ts'));
-  const routes = await getRouteDetails(tempRoot);
-  expect(routes).toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({ path: '/*slug', type: 'catch-all' }),
-      expect.objectContaining({ path: '/*all', type: 'optional-catch-all' }),
-    ]),
+    }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/app/(group)/settings/page.tsx',
+      isRouteGroup: true,
+    }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/app/(.)modal/page.tsx',
+      isIntercepting: true,
+    }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/app/(group)/[slug]/page.tsx',
+      isDynamic: true,
+    }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/app/profile/[id]/page.tsx',
+      isDynamic: true,
+    }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/app/@parallel/settings/page.tsx',
+      isParallel: true,
+    }),
   );
 });
 
-it('includes API routes', async () => {
-  const dir = path.join(tempRoot, 'app', 'blog');
-  await createFile(path.join(dir, 'route.ts'));
-  const routes = await getRouteDetails(tempRoot);
-  expect(
-    routes.some(
-      (r) =>
-        r.path === '/api/blog' && r.type === 'static' && r.router === 'app',
-    ),
-  ).toBe(true);
-});
+it('detects pages router routes', async () => {
+  const routes = await getRoutes('/project');
 
-it('finds pages routes and handles index files correctly', async () => {
-  const aboutDir = path.join(tempRoot, 'pages', 'about');
-  await createFile(path.join(aboutDir, 'index.tsx'));
-  const homeFile = path.join(tempRoot, 'pages', 'index.js');
-  await createFile(homeFile);
-  const routes = await getRouteDetails(tempRoot);
-  expect(routes).toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({ path: '/', router: 'pages' }),
-      expect.objectContaining({ path: '/about', router: 'pages' }),
-    ]),
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/pages/api/user.ts',
+      type: 'api',
+      router: 'pages',
+    }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({ path: '/project/pages/_app.tsx', type: 'app' }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/pages/_document.tsx',
+      type: 'document',
+    }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({ path: '/project/pages/404.tsx', type: '404' }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({ path: '/project/pages/500.tsx', type: '500' }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/pages/[slug].tsx',
+      isDynamic: true,
+    }),
+  );
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/pages/blog/[id]/index.tsx',
+      isDynamic: true,
+    }),
   );
 });
 
-it('includes pages/api routes', async () => {
-  const apiDir = path.join(tempRoot, 'pages', 'api', 'users');
-  await createFile(path.join(apiDir, 'index.js'));
-  const routes = await getRouteDetails(tempRoot);
-  expect(routes.some((r) => r.path.startsWith('/api'))).toBe(true);
-});
+it('detects middleware route', async () => {
+  const routes = await getRoutes('/project');
 
-it('returns an empty array when no app or pages directory exists', async () => {
-  const routes = await getRouteDetails(tempRoot);
-  expect(routes).toEqual([]);
+  expect(routes).toContainEqual(
+    expect.objectContaining({
+      path: '/project/middleware.ts',
+      type: 'middleware',
+    }),
+  );
 });
