@@ -5,9 +5,7 @@ export function withNextDevTools(nextConfig: NextConfig): NextConfig {
     ...nextConfig,
     webpack(config, options) {
       if (options.dev && options.isServer && options.nextRuntime === 'nodejs') {
-        import('./init-wss-server').then(({ initWssServer }) =>
-          initWssServer(),
-        );
+        import('./wss').then(({ Wss }) => Wss());
       }
 
       if (typeof nextConfig.webpack === 'function') {

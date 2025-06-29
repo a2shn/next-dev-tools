@@ -160,6 +160,9 @@ importers:
       consola:
         specifier: ^3.4.2
         version: 3.4.2
+      next:
+        specifier: 15.3.4
+        version: 15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tinyglobby:
         specifier: ^0.2.14
         version: 0.2.14
