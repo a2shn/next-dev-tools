@@ -9,8 +9,8 @@ export async function Wss(): Promise<WebSocketServer> {
   const port = WSS_PORT;
   const wss = new WebSocketServer({ port });
 
-  consola.info(
-    `[DEVTOOLS] 🛠  WebSocket Server started on ws://localhost:${port}`,
+  consola.start(
+    `[DEVTOOLS] 🛠  WebSocket Server starting on ws://localhost:${port}`,
   );
 
   wss.on('connection', (ws, req) => {
@@ -32,22 +32,24 @@ export async function Wss(): Promise<WebSocketServer> {
             });
             break;
           default:
-            consola.warn(`[DEVTOOLS] Unknown message type: ${message.type}`);
+            consola.error(
+              new Error(`[DEVTOOLS] Unknown message type: ${message.type}`),
+            );
             respond<null>(ws, {
               success: false,
-              payload: null,
+              error: 'Unknown message',
             });
         }
       } catch (err) {
-        consola.error('[DEVTOOLS] Failed to parse message:', data);
+        consola.error(new Error('[DEVTOOLS] Failed to parse message'));
       }
     });
 
     ws.on('error', (err) => {
-      consola.error(`[DEVTOOLS] WebSocket error:`, err);
+      consola.error(new Error(`[DEVTOOLS] WebSocket error: ${err.message}`));
       respond(ws, {
         success: false,
-        payload: null,
+        error: err.message,
       });
     });
 

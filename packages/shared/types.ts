@@ -3,10 +3,16 @@ export interface IncomingWsMessage {
   payload: string;
 }
 
-export interface OutgoingWsMessage<T> {
-  success: boolean;
-  payload: T;
-}
+export type OutgoingWsMessage<T> =
+  | {
+      success: true;
+      payload: T;
+    }
+  | {
+      success: false;
+      payload?: T;
+      error: string;
+    };
 
 export interface RouteInfo {
   path: string;
