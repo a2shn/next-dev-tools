@@ -7,6 +7,9 @@ export function respond<T>(
   responsePayload: OutgoingWsMessage<T>,
 ) {
   ws.send(JSON.stringify(responsePayload), (err?: Error) => {
-    if (err) consola.error('[DEVTOOLS] Error occurred while sending', err);
+    if (err)
+      consola.error(
+        new Error(`[DEVTOOLS] Error occurred while sending ${err}`),
+      );
   });
 }
