@@ -2,7 +2,7 @@ import { it, expect, beforeEach, afterEach } from 'vitest';
 import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
-import { getRouteDetails } from './get-route-details';
+import { getRouteDetails } from './get-routes';
 
 let tempRoot: string;
 
@@ -22,7 +22,7 @@ async function createFile(filePath: string, content = '') {
 it('detects static app routes', async () => {
   const dir = path.join(tempRoot, 'app', 'home');
   await createFile(path.join(dir, 'page.tsx'));
-  const routes = await getRouteDetails({ rootDir: tempRoot });
+  const routes = await getRouteDetails(tempRoot);
   expect(routes).toEqual([
     {
       path: '/home',
@@ -36,7 +36,7 @@ it('detects static app routes', async () => {
 it('detects dynamic app routes', async () => {
   const dir = path.join(tempRoot, 'app', '[user]');
   await createFile(path.join(dir, 'page.jsx'));
-  const routes = await getRouteDetails({ rootDir: tempRoot });
+  const routes = await getRouteDetails(tempRoot);
   expect(routes).toHaveLength(1);
   expect(routes[0]).toMatchObject({
     path: '/:user',
@@ -50,7 +50,7 @@ it('detects catch-all and optional catch-all routes', async () => {
   const optionalCatchAll = path.join(tempRoot, 'app', '[[...all]]');
   await createFile(path.join(catchAll, 'page.ts'));
   await createFile(path.join(optionalCatchAll, 'page.ts'));
-  const routes = await getRouteDetails({ rootDir: tempRoot });
+  const routes = await getRouteDetails(tempRoot);
   expect(routes).toEqual(
     expect.arrayContaining([
       expect.objectContaining({ path: '/*slug', type: 'catch-all' }),
@@ -59,13 +59,10 @@ it('detects catch-all and optional catch-all routes', async () => {
   );
 });
 
-it('includes API routes when includeApi=true', async () => {
+it('includes API routes', async () => {
   const dir = path.join(tempRoot, 'app', 'blog');
   await createFile(path.join(dir, 'route.ts'));
-  const routes = await getRouteDetails({
-    rootDir: tempRoot,
-    includeApi: true,
-  });
+  const routes = await getRouteDetails(tempRoot);
   expect(
     routes.some(
       (r) =>
@@ -79,7 +76,7 @@ it('finds pages routes and handles index files correctly', async () => {
   await createFile(path.join(aboutDir, 'index.tsx'));
   const homeFile = path.join(tempRoot, 'pages', 'index.js');
   await createFile(homeFile);
-  const routes = await getRouteDetails({ rootDir: tempRoot });
+  const routes = await getRouteDetails(tempRoot);
   expect(routes).toEqual(
     expect.arrayContaining([
       expect.objectContaining({ path: '/', router: 'pages' }),
@@ -88,17 +85,14 @@ it('finds pages routes and handles index files correctly', async () => {
   );
 });
 
-it('ignores pages/api routes when includeApi=false', async () => {
+it('includes pages/api routes', async () => {
   const apiDir = path.join(tempRoot, 'pages', 'api', 'users');
   await createFile(path.join(apiDir, 'index.js'));
-  const routes = await getRouteDetails({
-    rootDir: tempRoot,
-    includeApi: false,
-  });
-  expect(routes.some((r) => r.path.startsWith('/api'))).toBe(false);
+  const routes = await getRouteDetails(tempRoot);
+  expect(routes.some((r) => r.path.startsWith('/api'))).toBe(true);
 });
 
 it('returns an empty array when no app or pages directory exists', async () => {
-  const routes = await getRouteDetails({ rootDir: tempRoot });
+  const routes = await getRouteDetails(tempRoot);
   expect(routes).toEqual([]);
 });

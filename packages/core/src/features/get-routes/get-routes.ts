@@ -2,15 +2,9 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import consola from 'consola';
 import '@next-dev-tools/shared/types';
-import type {
-  RouteDiscoveryOptions,
-  RouteInfo,
-} from '@next-dev-tools/shared/types';
+import type { RouteInfo } from '@next-dev-tools/shared/types';
 
-async function discoverAppRoutes(
-  appDir: string,
-  includeApi: boolean,
-): Promise<RouteInfo[]> {
+async function discoverAppRoutes(appDir: string): Promise<RouteInfo[]> {
   const routes: RouteInfo[] = [];
 
   async function traverseAppDirectory(
@@ -41,7 +35,7 @@ async function discoverAppRoutes(
             });
           }
 
-          if (includeApi && (await hasRouteFile(fullPath))) {
+          if (await hasRouteFile(fullPath)) {
             const routeType = getRouteType(entry.name);
             routes.push({
               path: `/api${newRoutePath}`,
@@ -63,10 +57,7 @@ async function discoverAppRoutes(
   return routes;
 }
 
-async function discoverPagesRoutes(
-  pagesDir: string,
-  includeApi: boolean,
-): Promise<RouteInfo[]> {
+async function discoverPagesRoutes(pagesDir: string): Promise<RouteInfo[]> {
   const routes: RouteInfo[] = [];
 
   async function traversePagesDirectory(
@@ -80,14 +71,14 @@ async function discoverPagesRoutes(
         const fullPath = path.join(dir, entry.name);
 
         if (entry.isDirectory()) {
-          if (entry.name === 'api' && !includeApi) {
+          if (entry.name === 'api') {
             continue;
           }
 
           const segmentPath = entry.name === 'api' ? '/api' : `/${entry.name}`;
           await traversePagesDirectory(fullPath, routePath + segmentPath);
         } else if (entry.isFile() && isPageFile(entry.name)) {
-          if (!includeApi && routePath.startsWith('/api')) {
+          if (routePath.startsWith('/api')) {
             continue;
           }
 
@@ -192,23 +183,19 @@ function getRouteType(name: string): RouteInfo['type'] {
   }
 }
 
-export async function getRouteDetails(
-  options: RouteDiscoveryOptions = {},
-): Promise<RouteInfo[]> {
-  const { rootDir = process.cwd(), includeApi = false } = options;
-
+export async function getRouteDetails(rootDir: string): Promise<RouteInfo[]> {
   try {
     const routes: RouteInfo[] = [];
 
     const appDir = path.join(rootDir, 'app');
     if (await directoryExists(appDir)) {
-      const appRoutes = await discoverAppRoutes(appDir, includeApi);
+      const appRoutes = await discoverAppRoutes(appDir);
       routes.push(...appRoutes);
     }
 
     const pagesDir = path.join(rootDir, 'pages');
     if (await directoryExists(pagesDir)) {
-      const pageRoutes = await discoverPagesRoutes(pagesDir, includeApi);
+      const pageRoutes = await discoverPagesRoutes(pagesDir);
       routes.push(...pageRoutes);
     }
 
