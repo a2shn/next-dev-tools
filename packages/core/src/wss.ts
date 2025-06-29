@@ -17,13 +17,13 @@ export async function Wss(): Promise<WebSocketServer> {
     const clientIP = req.socket.remoteAddress;
     consola.success(`[DEVTOOLS] 🚀 Client connected from ${clientIP}`);
 
-    ws.on('message', (data) => {
+    ws.on('message', async (data) => {
       try {
         const message = JSON.parse(data.toString()) as IncomingWsMessage;
 
         switch (message.type) {
           case 'routes':
-            handleGetRoutesQuery(ws);
+            await handleGetRoutesQuery(ws);
             break;
           case 'ping':
             respond(ws, {
