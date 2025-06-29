@@ -1,9 +1,9 @@
-export interface WebSocketIncomingMessage {
+export interface IncomingWsMessage {
   type: 'routes' | 'ping';
   payload: string;
 }
 
-export interface WebSocketOutcomingMessage<T> {
+export interface OutgoingWsMessage<T> {
   success: boolean;
   payload: T;
 }

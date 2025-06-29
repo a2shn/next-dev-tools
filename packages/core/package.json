@@ -12,7 +12,7 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
+    "build": "tsc -b --noEmit && tsup",
     "test": "vitest run",
     "lint": "eslint . --fix"
   },

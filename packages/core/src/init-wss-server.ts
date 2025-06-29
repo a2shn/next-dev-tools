@@ -1,9 +1,9 @@
 import { WSS_PORT } from '@next-dev-tools/shared/constants';
-import type { WebSocketIncomingMessage } from '@next-dev-tools/shared/types';
+import type { IncomingWsMessage } from '@next-dev-tools/shared/types';
 import { consola } from 'consola';
 import { WebSocketServer } from 'ws';
-import { handlePing, handleRouteDetails } from './handlers';
 import { respond } from './lib/utils';
+import { handleGetRoutesQuery } from './features/get-routes/handler';
 
 export async function initWssServer(): Promise<void> {
   const port = WSS_PORT;
@@ -19,14 +19,17 @@ export async function initWssServer(): Promise<void> {
 
     ws.on('message', (data) => {
       try {
-        const message = JSON.parse(data.toString()) as WebSocketIncomingMessage;
+        const message = JSON.parse(data.toString()) as IncomingWsMessage;
 
         switch (message.type) {
           case 'routes':
-            handleRouteDetails(ws);
+            handleGetRoutesQuery(ws);
             break;
           case 'ping':
-            handlePing(ws);
+            respond(ws, {
+              success: true,
+              payload: null,
+            });
             break;
           default:
             consola.warn(`[DEVTOOLS] Unknown message type: ${message.type}`);
