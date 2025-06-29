@@ -5,7 +5,7 @@ import { WebSocketServer } from 'ws';
 import { respond } from './lib/utils';
 import { handleGetRoutesQuery } from './features/get-routes/handler';
 
-export async function initWssServer(): Promise<void> {
+export async function Wss(): Promise<WebSocketServer> {
   const port = WSS_PORT;
   const wss = new WebSocketServer({ port });
 
@@ -45,10 +45,16 @@ export async function initWssServer(): Promise<void> {
 
     ws.on('error', (err) => {
       consola.error(`[DEVTOOLS] WebSocket error:`, err);
+      respond(ws, {
+        success: false,
+        payload: null,
+      });
     });
 
     ws.on('close', () => {
       consola.warn('[DEVTOOLS] 🔌 Client disconnected');
     });
   });
+
+  return wss;
 }
