@@ -3,7 +3,7 @@ import type { IncomingWsMessage } from '@next-dev-tools/shared/types';
 import { consola } from 'consola';
 import { WebSocketServer } from 'ws';
 import { respond } from './lib/utils';
-import { handleGetRoutesQuery } from './features/get-routes/handler';
+import { discoverRoutesHandler } from './features/routes/handlers';
 
 export async function Wss(): Promise<WebSocketServer> {
   const port = WSS_PORT;
@@ -21,11 +21,11 @@ export async function Wss(): Promise<WebSocketServer> {
       try {
         const message = JSON.parse(data.toString()) as IncomingWsMessage;
 
-        switch (message.type) {
-          case 'routes':
-            await handleGetRoutesQuery(ws);
+        switch (message.query) {
+          case 'routes:discover':
+            await discoverRoutesHandler(ws);
             break;
-          case 'ping':
+          case 'sys:ping':
             respond(ws, {
               success: true,
               payload: null,
@@ -33,7 +33,7 @@ export async function Wss(): Promise<WebSocketServer> {
             break;
           default:
             consola.error(
-              new Error(`[DEVTOOLS] Unknown message type: ${message.type}`),
+              new Error(`[DEVTOOLS] Unknown message type: ${message.query}`),
             );
             respond<null>(ws, {
               success: false,

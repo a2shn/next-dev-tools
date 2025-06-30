@@ -1,7 +1,7 @@
 import type { RouteInfo } from '@next-dev-tools/shared/types';
 import { glob } from 'tinyglobby';
 
-export async function getRoutes(
+export async function discoverRoutes(
   rootDir: string = process.cwd(),
 ): Promise<RouteInfo[]> {
   const routes: RouteInfo[] = [];

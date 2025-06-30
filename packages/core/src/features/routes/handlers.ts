@@ -1,11 +1,11 @@
 import { respond } from '@/lib/utils';
 import type { WebSocket } from 'ws';
-import { getRoutes } from './get-routes';
+import { discoverRoutes } from './discover-routes';
 
-export async function handleGetRoutesQuery(ws: WebSocket) {
+export async function discoverRoutesHandler(ws: WebSocket) {
   const cwd = process.cwd();
 
-  const routes = await getRoutes(cwd);
+  const routes = await discoverRoutes(cwd);
 
   if (routes.length === 0) {
     respond(ws, {
