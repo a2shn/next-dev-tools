@@ -2,7 +2,14 @@ import { it, beforeAll, afterAll, expect, vi } from 'vitest';
 import { WebSocket, WebSocketServer } from 'ws';
 import { Wss } from './wss';
 import { WSS_PORT } from '@next-dev-tools/shared/constants';
-import * as handler from './features/get-routes/handler';
+import * as handler from './features/routes/handlers';
+import {
+  IncomingWsMessage,
+  OutgoingWsMessage,
+} from '@next-dev-tools/shared/types';
+import { consola } from 'consola';
+
+consola.pauseLogs();
 
 let server: WebSocketServer;
 
@@ -38,7 +45,7 @@ it('handles ping message and responds with success', async () => {
 
   await new Promise<void>((resolve, reject) => {
     ws.on('open', () => {
-      ws.send(JSON.stringify({ type: 'ping' }));
+      ws.send(JSON.stringify({ query: 'sys:ping' } as IncomingWsMessage));
     });
 
     ws.on('message', (data) => {
@@ -53,18 +60,25 @@ it('handles ping message and responds with success', async () => {
   });
 });
 
-it('calls handleGetRoutesQuery on "routes" message', async () => {
+it('calls discoverRoutesHandler on "discover:routes" message', async () => {
   const mockHandle = vi
-    .spyOn(handler, 'handleGetRoutesQuery')
+    .spyOn(handler, 'discoverRoutesHandler')
     .mockImplementation(async (ws) => {
-      ws.send(JSON.stringify({ success: true, payload: ['route1', 'route2'] }));
+      ws.send(
+        JSON.stringify({
+          success: true,
+          payload: ['route1', 'route2'],
+        } as OutgoingWsMessage<string[]>),
+      );
     });
 
   const ws = new WebSocket(`ws://localhost:${WSS_PORT}`);
 
   await new Promise<void>((resolve, reject) => {
     ws.on('open', () => {
-      ws.send(JSON.stringify({ type: 'routes' }));
+      ws.send(
+        JSON.stringify({ query: 'routes:discover' } as IncomingWsMessage),
+      );
     });
 
     ws.on('message', (data) => {

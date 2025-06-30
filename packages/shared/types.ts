@@ -1,5 +1,5 @@
 export interface IncomingWsMessage {
-  type: 'routes' | 'ping';
+  query: 'routes:discover' | 'sys:ping';
   payload: string;
 }
 

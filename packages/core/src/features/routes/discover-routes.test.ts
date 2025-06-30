@@ -1,5 +1,5 @@
 import { it, expect, vi } from 'vitest';
-import { getRoutes } from './get-routes.ts';
+import { discoverRoutes } from './discover-routes.ts';
 import { glob } from 'tinyglobby';
 
 vi.mock('tinyglobby', () => {
@@ -32,7 +32,7 @@ const mockFiles = [
 ];
 
 it('detects app router routes', async () => {
-  const routes = await getRoutes('/project');
+  const routes = await discoverRoutes('/project');
 
   expect(glob).toHaveBeenCalled();
   expect(routes).toContainEqual(
@@ -73,7 +73,7 @@ it('detects app router routes', async () => {
 });
 
 it('detects pages router routes', async () => {
-  const routes = await getRoutes('/project');
+  const routes = await discoverRoutes('/project');
 
   expect(routes).toContainEqual(
     expect.objectContaining({
@@ -110,7 +110,7 @@ it('detects pages router routes', async () => {
 });
 
 it('detects middleware route', async () => {
-  const routes = await getRoutes('/project');
+  const routes = await discoverRoutes('/project');
 
   expect(routes).toContainEqual(
     expect.objectContaining({
