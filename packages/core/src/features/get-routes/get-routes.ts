@@ -46,9 +46,6 @@ export async function getRoutes(
       const routeType = filename.split('.')[0] as RouteInfo['type'];
 
       const pathSegments = segments.slice(0, -1);
-      const isDynamic = pathSegments.some(
-        (segment) => segment.startsWith('[') && segment.endsWith(']'),
-      );
       const isParallel = pathSegments.some((segment) =>
         segment.startsWith('@'),
       );
@@ -68,11 +65,9 @@ export async function getRoutes(
         path: file,
         type: routeType,
         router: 'app',
-        isDynamic,
         isParallel,
         isIntercepting,
         isRouteGroup,
-        segments: pathSegments,
       });
     }
   }
@@ -95,19 +90,13 @@ export async function getRoutes(
       else if (nameWithoutExt === '500') routeType = '500';
       else if (segments.includes('api')) routeType = 'api';
 
-      const pathSegments = segments.slice(0, -1);
-      const isDynamic =
-        nameWithoutExt.startsWith('[') && nameWithoutExt.endsWith(']');
-
       routes.push({
         path: file,
         type: routeType,
         router: 'pages',
-        isDynamic,
         isParallel: false,
         isIntercepting: false,
         isRouteGroup: false,
-        segments: pathSegments,
       });
     }
   }
@@ -120,11 +109,9 @@ export async function getRoutes(
         path: file,
         type: 'middleware',
         router: 'app',
-        isDynamic: false,
         isParallel: false,
         isIntercepting: false,
         isRouteGroup: false,
-        segments: [],
       });
     }
   }

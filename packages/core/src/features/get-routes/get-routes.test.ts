@@ -57,13 +57,11 @@ it('detects app router routes', async () => {
   expect(routes).toContainEqual(
     expect.objectContaining({
       path: '/project/app/(group)/[slug]/page.tsx',
-      isDynamic: true,
     }),
   );
   expect(routes).toContainEqual(
     expect.objectContaining({
       path: '/project/app/profile/[id]/page.tsx',
-      isDynamic: true,
     }),
   );
   expect(routes).toContainEqual(
@@ -102,13 +100,11 @@ it('detects pages router routes', async () => {
   expect(routes).toContainEqual(
     expect.objectContaining({
       path: '/project/pages/[slug].tsx',
-      isDynamic: true,
     }),
   );
   expect(routes).toContainEqual(
     expect.objectContaining({
       path: '/project/pages/blog/[id]/index.tsx',
-      isDynamic: true,
     }),
   );
 });
