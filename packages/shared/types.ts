@@ -33,9 +33,7 @@ export interface RouteInfo {
     | '500'
     | 'middleware';
   router: 'app' | 'pages';
-  isDynamic: boolean;
   isParallel: boolean;
   isIntercepting: boolean;
   isRouteGroup: boolean;
-  segments: string[];
 }
