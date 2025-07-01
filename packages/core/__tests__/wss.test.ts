@@ -1,8 +1,8 @@
 import { it, beforeAll, afterAll, expect, vi } from 'vitest';
 import { WebSocket, WebSocketServer } from 'ws';
-import { Wss } from './wss';
+import { Wss } from '../src/wss';
 import { WSS_PORT } from '@next-dev-tools/shared/constants';
-import * as handler from './features/routes/handlers';
+import * as handler from '../src/features/routes/handlers';
 import {
   IncomingWsMessage,
   OutgoingWsMessage,
