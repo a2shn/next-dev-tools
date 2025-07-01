@@ -10,30 +10,6 @@ export type OutgoingWsMessage<T> =
     }
   | {
       success: false;
-      payload?: T;
+      payload: T;
       error: string;
     };
-
-export interface RouteInfo {
-  path: string;
-  type:
-    | 'page'
-    | 'layout'
-    | 'loading'
-    | 'error'
-    | 'not-found'
-    | 'route'
-    | 'default'
-    | 'template'
-    | 'api'
-    | 'app'
-    | 'document'
-    | 'custom-error'
-    | '404'
-    | '500'
-    | 'middleware';
-  router: 'app' | 'pages';
-  isParallel: boolean;
-  isIntercepting: boolean;
-  isRouteGroup: boolean;
-}

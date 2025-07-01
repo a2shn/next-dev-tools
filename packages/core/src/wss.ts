@@ -35,8 +35,9 @@ export async function Wss(): Promise<WebSocketServer> {
             consola.error(
               new Error(`[DEVTOOLS] Unknown message type: ${message.query}`),
             );
-            respond<null>(ws, {
+            respond(ws, {
               success: false,
+              payload: [],
               error: 'Unknown message',
             });
         }
@@ -50,6 +51,7 @@ export async function Wss(): Promise<WebSocketServer> {
       respond(ws, {
         success: false,
         error: err.message,
+        payload: [],
       });
     });
 
