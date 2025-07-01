@@ -13,3 +13,13 @@ export type OutgoingWsMessage<T> =
       payload: T;
       error: string;
     };
+
+export interface AssetInfo {
+  path: string;
+  name: string;
+  size: number;
+  extension: string;
+  lastModified: string;
+  url: string | null;
+  type: 'static' | 'dynamic' | 'inaccessible';
+}
