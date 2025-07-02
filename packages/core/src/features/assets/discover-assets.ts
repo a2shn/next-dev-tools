@@ -3,6 +3,8 @@ import { stat } from 'fs/promises';
 import path from 'path';
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
 import { AssetInfo } from '@next-dev-tools/shared/types';
+import { generateAssetUrl } from './generate-asset-url';
+import { getAssetType } from './get-asset-type';
 
 export async function discoverAssets(rootDir: string): Promise<AssetInfo[]> {
   const assetPatterns = [
@@ -55,81 +57,4 @@ export async function discoverAssets(rootDir: string): Promise<AssetInfo[]> {
   }
 
   return assets.sort((a, b) => a.path.localeCompare(b.path));
-}
-
-function generateAssetUrl(filePath: string): string | null {
-  if (filePath.startsWith('public/')) {
-    return filePath.replace('public/', '/');
-  }
-
-  if (filePath.includes('/app/') || filePath.startsWith('app/')) {
-    if (filePath.includes('sitemap.')) {
-      return '/sitemap.xml';
-    }
-    if (filePath.includes('robots.')) {
-      return '/robots.txt';
-    }
-    if (filePath.includes('manifest.')) {
-      return '/manifest.json';
-    }
-    if (filePath.includes('icon.') || filePath.includes('favicon.')) {
-      return '/icon';
-    }
-    if (
-      filePath.includes('apple-touch-icon') ||
-      filePath.includes('apple-icon')
-    ) {
-      return '/apple-touch-icon';
-    }
-    if (
-      filePath.includes('opengraph-image') ||
-      filePath.includes('opengraph')
-    ) {
-      const routePath = extractRouteFromPath(filePath);
-      return routePath ? `${routePath}/opengraph-image` : '/opengraph-image';
-    }
-
-    if (filePath.includes('twitter-image')) {
-      const routePath = extractRouteFromPath(filePath);
-      return routePath ? `${routePath}/twitter-image` : '/twitter-image';
-    }
-    if (filePath.match(/\.(jpg|jpeg|png|gif|svg|webp|ico|bmp|tiff|avif)$/i)) {
-      return null;
-    }
-  }
-
-  if (filePath.includes('/pages/') || filePath.startsWith('pages/')) {
-    if (filePath.match(/\.(jpg|jpeg|png|gif|svg|webp|ico|bmp|tiff|avif)$/i)) {
-      return null;
-    }
-  }
-
-  return null;
-}
-
-function extractRouteFromPath(filePath: string): string | null {
-  const match = filePath.match(/(?:app|src\/app)\/(.+?)\/[^/]+$/);
-  if (match) {
-    return '/' + match[1];
-  }
-  return null;
-}
-
-function getAssetType(filePath: string): AssetInfo['type'] {
-  if (filePath.startsWith('public/')) {
-    return 'static';
-  }
-  if (
-    filePath.match(/\.(js|ts|tsx|ico)$/) &&
-    (filePath.includes('sitemap') ||
-      filePath.includes('robots') ||
-      filePath.includes('manifest') ||
-      filePath.includes('icon') ||
-      filePath.includes('opengraph-image') ||
-      filePath.includes('opengraph') ||
-      filePath.includes('twitter-image'))
-  ) {
-    return 'dynamic';
-  }
-  return 'inaccessible';
 }
