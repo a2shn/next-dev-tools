@@ -126,22 +126,3 @@ function getAssetType(filePath: string): AssetInfo['type'] {
   }
   return 'inaccessible';
 }
-
-export function analyzeAssets(assets: AssetInfo[]) {
-  const analysis = {
-    total: assets.length,
-    accessible: assets.filter((a) => a.url !== null).length,
-    static: assets.filter((a) => a.type === 'static').length,
-    dynamic: assets.filter((a) => a.type === 'dynamic').length,
-    inaccessible: assets.filter((a) => a.type === 'inaccessible').length,
-    totalSize: assets.reduce((sum, asset) => sum + asset.size, 0),
-    byExtension: {} as Record<string, number>,
-  };
-
-  assets.forEach((asset) => {
-    const ext = asset.extension.toLowerCase();
-    analysis.byExtension[ext] = (analysis.byExtension[ext] || 0) + 1;
-  });
-
-  return analysis;
-}

@@ -3,34 +3,20 @@ import path from 'path';
 
 const fixturesDir = path.join(process.cwd(), '__fixtures__');
 
-export const tempRoutesTestDir = 'temp-routes-test';
-export function createDummyRoutes() {
-  const files = [
-    'app/(admin)/page.tsx',
-    'app/dashboard/layout.tsx',
-    'app/dashboard/page.tsx',
-    'app/loading.tsx',
-    'app/not-found.tsx',
-    'app/error.tsx',
-    'src/middleware.ts',
-    'src/pages/index.tsx',
-    'src/pages/about.tsx',
-    'src/pages/api/hello.ts',
-    'src/pages/[slug].tsx',
-    'src/pages/[...catchall].tsx',
-    'src/pages/[[...optional]].tsx',
-  ];
+export const testDirPath = (dir: string) =>
+  path.join(process.cwd(), '__fixtures__', dir);
 
+export function createDummy({ files, dir }: { files: string[]; dir: string }) {
   for (const file of files) {
-    const fullPath = path.join(fixturesDir, tempRoutesTestDir, file);
+    const fullPath = path.join(fixturesDir, dir, file);
     fs.mkdirSync(path.dirname(fullPath), { recursive: true });
     fs.writeFileSync(fullPath, '// dummy content\n');
   }
 }
 
-export function deleteDummyRoutes() {
-  if (fs.existsSync(fixturesDir)) {
-    fs.rmSync(path.join(fixturesDir, tempRoutesTestDir), {
+export function deleteDummy(dir: string) {
+  if (fs.existsSync(testDirPath(dir))) {
+    fs.rmSync(path.join(fixturesDir, dir), {
       recursive: true,
       force: true,
     });
