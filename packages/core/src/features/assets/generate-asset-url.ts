@@ -13,7 +13,13 @@ export function generateAssetUrl(filePath: string): string | null {
     if (filePath.includes('manifest.')) {
       return '/manifest.json';
     }
-    if (filePath.includes('icon.') || filePath.includes('favicon.')) {
+    if (filePath.includes('favicon.')) {
+      const extension =
+        filePath.match(/\.(png|jpg|jpeg|svg|ico)$/i)?.[1] || 'ico';
+      return `/favicon.${extension}`;
+    }
+
+    if (filePath.includes('icon.')) {
       const extension =
         filePath.match(/\.(png|jpg|jpeg|svg|ico)$/i)?.[1] || 'png';
       return `/icon.${extension}`;
@@ -43,18 +49,12 @@ export function generateAssetUrl(filePath: string): string | null {
         : `/twitter-image.${extension}`;
     }
     if (filePath.match(/\.(jpg|jpeg|png|gif|svg|webp|ico|bmp|tiff|avif)$/i)) {
-      console.warn(
-        `Image ${filePath} should be moved to public/ directory for direct access`,
-      );
       return null;
     }
   }
 
   if (filePath.includes('/pages/') || filePath.startsWith('pages/')) {
     if (filePath.match(/\.(jpg|jpeg|png|gif|svg|webp|ico|bmp|tiff|avif)$/i)) {
-      console.warn(
-        `Image ${filePath} should be moved to public/ directory for direct access`,
-      );
       return null;
     }
   }
