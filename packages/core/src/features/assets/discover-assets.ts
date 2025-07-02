@@ -15,13 +15,16 @@ export async function discoverAssets(rootDir: string): Promise<AssetInfo[]> {
     '{app,src/app}/**/sitemap.{js,ts}',
     '{app,src/app}/**/robots.{js,ts}',
     '{app,src/app}/**/manifest.{js,ts}',
-    '{app,src/app}/**/*icon*.{js,ts,tsx}',
-    '{app,src/app}/**/*og-image*.{js,ts,tsx}',
-    '{app,src/app}/**/*opengraph*.{js,ts,tsx}',
-    '{app,src/app}/**/*twitter-image*.{js,ts,tsx}',
-    '{app,src/app}/**/*apple-*icon*.{js,ts,tsx}',
-    'pages/**/*.{jpg,jpeg,png,gif,svg,webp,ico}',
-    'src/pages/**/*.{jpg,jpeg,png,gif,svg,webp,ico}',
+    '{app,src/app}/**/favicon.{ico,jpg,jpeg,png,svg,webp,avif}',
+    '{app,src/app}/**/*icon*.{js,ts,tsx,jpg,jpeg,png,svg,webp,avif}',
+    '{app,src/app}/**/apple-*icon*.{js,ts,tsx,jpg,jpeg,png,svg,webp,avif}',
+    '{app,src/app}/**/opengraph-image*.{js,ts,tsx,jpg,jpeg,png,gif,svg,webp,avif}',
+    '{app,src/app}/**/twitter-image*.{js,ts,tsx,jpg,jpeg,png,gif,svg,webp,avif}',
+    '{app,src/app}/**/opengraph/**/*.{js,ts,tsx,jpg,jpeg,png,gif,svg,webp,avif}',
+    '{app,src/app}/**/twitter/**/*.{js,ts,tsx,jpg,jpeg,png,gif,svg,webp,avif}',
+    'pages/**/*.{jpg,jpeg,png,gif,svg,webp,ico,bmp,tiff,avif}',
+    'src/pages/**/*.{jpg,jpeg,png,gif,svg,webp,ico,bmp,tiff,avif}',
+    'src/pages/**/*icon*.{js,ts,tsx,jpg,jpeg,png,svg,webp,avif}',
   ];
 
   const files = await glob(assetPatterns, {
@@ -78,10 +81,14 @@ function generateAssetUrl(filePath: string): string | null {
     ) {
       return '/apple-touch-icon';
     }
-    if (filePath.includes('og-image') || filePath.includes('opengraph')) {
+    if (
+      filePath.includes('opengraph-image') ||
+      filePath.includes('opengraph')
+    ) {
       const routePath = extractRouteFromPath(filePath);
       return routePath ? `${routePath}/opengraph-image` : '/opengraph-image';
     }
+
     if (filePath.includes('twitter-image')) {
       const routePath = extractRouteFromPath(filePath);
       return routePath ? `${routePath}/twitter-image` : '/twitter-image';
@@ -113,12 +120,12 @@ function getAssetType(filePath: string): AssetInfo['type'] {
     return 'static';
   }
   if (
-    filePath.match(/\.(js|ts|tsx)$/) &&
+    filePath.match(/\.(js|ts|tsx|ico)$/) &&
     (filePath.includes('sitemap') ||
       filePath.includes('robots') ||
       filePath.includes('manifest') ||
       filePath.includes('icon') ||
-      filePath.includes('og-image') ||
+      filePath.includes('opengraph-image') ||
       filePath.includes('opengraph') ||
       filePath.includes('twitter-image'))
   ) {
