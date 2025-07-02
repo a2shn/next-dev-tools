@@ -43,6 +43,5 @@ export interface AssetInfo {
   size: number;
   extension: string;
   lastModified: string;
-  url: string | null;
   type: 'static' | 'dynamic' | 'inaccessible';
 }

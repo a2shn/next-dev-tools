@@ -38,37 +38,36 @@ it('discovers all dummy assets', () => {
 
 it('correctly sets static public asset url', () => {
   const img = assets.find((a) => a.path.includes('public/images/logo.png'));
-  expect(img?.url).toBe('/images/logo.png');
+
   expect(img?.type).toBe('static');
 });
 
 it('detects sitemap asset with dynamic url', () => {
   const sitemap = assets.find((a) => a.path.endsWith('app/sitemap.js'));
-  expect(sitemap?.url).toBe('/sitemap.xml');
+
   expect(sitemap?.type).toBe('dynamic');
 });
 
 it('detects robots asset with dynamic url', () => {
   const robots = assets.find((a) => a.path.endsWith('app/robots.ts'));
-  expect(robots?.url).toBe('/robots.txt');
+
   expect(robots?.type).toBe('dynamic');
 });
 
 it('detects manifest asset with dynamic url', () => {
   const manifest = assets.find((a) => a.path.endsWith('app/manifest.ts'));
-  expect(manifest?.url).toBe('/manifest.json');
+
   expect(manifest?.type).toBe('dynamic');
 });
 
 it('detects favicon asset with dynamic url', () => {
   const favicon = assets.find((a) => a.path.endsWith('app/icons/favicon.ico'));
-  expect(favicon?.url).toBe('/favicon.ico');
+
   expect(favicon?.type).toBe('dynamic');
 });
 
 it('detects opengraph image asset with correct route url', () => {
   const og = assets.find((a) => a.path.includes('opengraph/og-image.tsx'));
-  expect(og?.url).toBe('/opengraph-image.png');
   expect(og?.type).toBe('dynamic');
 });
 
@@ -76,30 +75,5 @@ it('detects twitter image asset with correct route url', () => {
   const twitter = assets.find((a) =>
     a.path.includes('twitter/twitter-image.tsx'),
   );
-  expect(twitter?.url).toBe('/twitter/twitter-image.png');
   expect(twitter?.type).toBe('dynamic');
-});
-
-it('returns null for app image assets', () => {
-  const appImg = assets.find((a) => a.path.includes('app/icons/favicon.ico'));
-  expect(appImg?.url).toBe('/favicon.ico');
-});
-
-it('returns null url for pages images', () => {
-  const pageImg = assets.find((a) =>
-    a.path.includes('pages/images/banner.jpg'),
-  );
-  expect(pageImg?.url).toBeNull();
-});
-
-it('returns null for app image assets', () => {
-  const appImg = assets.find((a) => a.path.includes('app/icons/favicon.ico'));
-  expect(appImg?.url).toBe('/favicon.ico');
-});
-
-it('returns null url for pages images', () => {
-  const pageImg = assets.find((a) =>
-    a.path.includes('pages/images/banner.jpg'),
-  );
-  expect(pageImg?.url).toBeNull();
 });
