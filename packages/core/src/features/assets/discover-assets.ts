@@ -3,7 +3,6 @@ import { stat } from 'fs/promises';
 import path from 'path';
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
 import { AssetInfo } from '@next-dev-tools/shared/types';
-import { generateAssetUrl } from './generate-asset-url';
 import { getAssetType } from './get-asset-type';
 
 export async function discoverAssets(rootDir: string): Promise<AssetInfo[]> {
@@ -49,7 +48,6 @@ export async function discoverAssets(rootDir: string): Promise<AssetInfo[]> {
       size: stats.size,
       extension,
       lastModified: stats.mtime.toISOString(),
-      url: generateAssetUrl(filePath),
       type: getAssetType(filePath),
     };
 
