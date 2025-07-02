@@ -62,7 +62,7 @@ it('detects manifest asset with dynamic url', () => {
 
 it('detects favicon asset with dynamic url', () => {
   const favicon = assets.find((a) => a.path.endsWith('app/icons/favicon.ico'));
-  expect(favicon?.url).toBe('/icon.ico');
+  expect(favicon?.url).toBe('/favicon.ico');
   expect(favicon?.type).toBe('dynamic');
 });
 
@@ -82,7 +82,7 @@ it('detects twitter image asset with correct route url', () => {
 
 it('returns null for app image assets', () => {
   const appImg = assets.find((a) => a.path.includes('app/icons/favicon.ico'));
-  expect(appImg?.url).toBe('/icon.ico');
+  expect(appImg?.url).toBe('/favicon.ico');
 });
 
 it('returns null url for pages images', () => {
@@ -94,7 +94,7 @@ it('returns null url for pages images', () => {
 
 it('returns null for app image assets', () => {
   const appImg = assets.find((a) => a.path.includes('app/icons/favicon.ico'));
-  expect(appImg?.url).toBe('/icon.ico');
+  expect(appImg?.url).toBe('/favicon.ico');
 });
 
 it('returns null url for pages images', () => {
