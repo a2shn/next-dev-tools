@@ -4,6 +4,7 @@ import { consola } from 'consola';
 import { WebSocketServer } from 'ws';
 import { respond } from './lib/utils';
 import { discoverRoutesHandler } from './features/routes/handlers';
+import { discoverAssetsHandler } from './features/assets/handlers';
 
 export async function Wss(): Promise<WebSocketServer> {
   const port = WSS_PORT;
@@ -22,6 +23,9 @@ export async function Wss(): Promise<WebSocketServer> {
         const message = JSON.parse(data.toString()) as IncomingWsMessage;
 
         switch (message.query) {
+          case 'assets:discover':
+            await discoverAssetsHandler(ws);
+            break;
           case 'routes:discover':
             await discoverRoutesHandler(ws);
             break;

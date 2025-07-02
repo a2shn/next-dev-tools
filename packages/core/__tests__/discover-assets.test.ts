@@ -33,7 +33,6 @@ afterAll(() => {
 });
 
 it('discovers all dummy assets', () => {
-  console.log(assets);
   expect(assets.length).toBe(13);
 });
 
