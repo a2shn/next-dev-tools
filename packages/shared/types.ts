@@ -44,3 +44,11 @@ export interface AssetInfo {
   lastModified: string;
   type: 'static' | 'dynamic' | 'inaccessible';
 }
+
+export interface APIRouteInfo {
+  path: string;
+  endpoint: string;
+  catchAll: boolean;
+  optional: boolean;
+  framework: 'app-router' | 'pages-router';
+}
