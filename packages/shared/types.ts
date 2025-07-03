@@ -30,7 +30,6 @@ export interface RouteInfo {
     | 'pages-router';
   url: string | null;
   segments: string[];
-  isApiRoute: boolean;
   routeGroups: string[];
   catchAll: boolean;
   optional: boolean;

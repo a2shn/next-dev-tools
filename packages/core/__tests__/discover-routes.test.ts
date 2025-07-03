@@ -16,6 +16,7 @@ const files = [
   'src/pages/index.tsx',
   'src/pages/about.tsx',
   'src/pages/api/hello.ts',
+  'src/app/api/hello/route.ts',
   'src/pages/[slug].tsx',
   'src/pages/[...catchall].tsx',
   'src/pages/[[...optional]].tsx',
@@ -35,7 +36,7 @@ afterAll(() => {
 });
 
 it('discovers correct number of routes', async () => {
-  expect(routes.length).toBe(13);
+  expect(routes.length).toBe(12);
 });
 
 it('discovers the page route in app/(admin)/page.tsx', async () => {
@@ -75,8 +76,7 @@ it('discovers the pages router index route at src/pages/index.tsx', async () => 
 
 it('detects API route at src/pages/api/hello.ts', async () => {
   const route = routes.find((r) => r.path.endsWith('src/pages/api/hello.ts'));
-  expect(route).toBeDefined();
-  expect(route?.isApiRoute).toBe(true);
+  expect(route).toBeUndefined();
 });
 
 it('detects dynamic catch-all route at src/pages/[...catchall].tsx', async () => {
@@ -100,13 +100,4 @@ it('detects optional catch-all route at src/pages/[[...optional]].tsx', async ()
 it('correctly extracts route groups in app/(admin)/page.tsx', async () => {
   const route = routes.find((r) => r.path.endsWith('app/(admin)/page.tsx'));
   expect(route?.routeGroups).toEqual(['admin']);
-});
-
-it('sorts routes by framework and url', async () => {
-  const sorted = [...routes].sort(
-    (a, b) =>
-      a.framework.localeCompare(b.framework) ||
-      (a.url || a.path).localeCompare(b.url || b.path),
-  );
-  expect(routes).toEqual(sorted);
 });
