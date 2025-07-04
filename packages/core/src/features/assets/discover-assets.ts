@@ -3,7 +3,6 @@ import { stat } from 'fs/promises';
 import path from 'path';
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
 import { AssetInfo } from '@next-dev-tools/shared/types';
-import { getAssetType } from './get-asset-type';
 
 export async function discoverAssets(rootDir: string): Promise<AssetInfo[]> {
   const assetPatterns = [
@@ -34,25 +33,19 @@ export async function discoverAssets(rootDir: string): Promise<AssetInfo[]> {
     cwd: rootDir,
   });
 
-  const assets: AssetInfo[] = [];
+  const assets: AssetInfo[] = await Promise.all(
+    files.map(async (filePath) => {
+      const fullPath = path.resolve(rootDir, filePath);
+      const stats = await stat(fullPath);
 
-  for (const filePath of files) {
-    const fullPath = path.resolve(rootDir, filePath);
-    const stats = await stat(fullPath);
-    const extension = path.extname(filePath);
-    const name = path.basename(filePath);
+      const assetInfo: AssetInfo = {
+        path: filePath,
+        size: stats.size,
+      };
 
-    const assetInfo: AssetInfo = {
-      path: filePath,
-      name,
-      size: stats.size,
-      extension,
-      lastModified: stats.mtime.toISOString(),
-      type: getAssetType(filePath),
-    };
+      return assetInfo;
+    }),
+  );
 
-    assets.push(assetInfo);
-  }
-
-  return assets.sort((a, b) => a.path.localeCompare(b.path));
+  return assets;
 }
