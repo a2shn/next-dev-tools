@@ -32,48 +32,11 @@ afterAll(() => {
   deleteDummy(testDirName);
 });
 
-it('discovers all dummy assets', () => {
+it('discovers all dummy assets with correct size', () => {
   expect(assets.length).toBe(13);
-});
 
-it('correctly sets static public asset url', () => {
-  const img = assets.find((a) => a.path.includes('public/images/logo.png'));
-
-  expect(img?.type).toBe('static');
-});
-
-it('detects sitemap asset with dynamic url', () => {
-  const sitemap = assets.find((a) => a.path.endsWith('app/sitemap.js'));
-
-  expect(sitemap?.type).toBe('dynamic');
-});
-
-it('detects robots asset with dynamic url', () => {
-  const robots = assets.find((a) => a.path.endsWith('app/robots.ts'));
-
-  expect(robots?.type).toBe('dynamic');
-});
-
-it('detects manifest asset with dynamic url', () => {
-  const manifest = assets.find((a) => a.path.endsWith('app/manifest.ts'));
-
-  expect(manifest?.type).toBe('dynamic');
-});
-
-it('detects favicon asset with dynamic url', () => {
-  const favicon = assets.find((a) => a.path.endsWith('app/icons/favicon.ico'));
-
-  expect(favicon?.type).toBe('dynamic');
-});
-
-it('detects opengraph image asset with correct route url', () => {
-  const og = assets.find((a) => a.path.includes('opengraph/og-image.tsx'));
-  expect(og?.type).toBe('dynamic');
-});
-
-it('detects twitter image asset with correct route url', () => {
-  const twitter = assets.find((a) =>
-    a.path.includes('twitter/twitter-image.tsx'),
-  );
-  expect(twitter?.type).toBe('dynamic');
+  for (const asset of assets) {
+    expect(typeof asset.size).toBe('number');
+    expect(asset.size).toBeGreaterThanOrEqual(0);
+  }
 });

@@ -1,8 +1,6 @@
 import { glob } from 'tinyglobby';
-import path from 'path';
 import { RouteInfo } from '@next-dev-tools/shared/types';
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
-import { analyzeRoute } from './analyze-route';
 
 export async function discoverRoutes(
   rootDir: string = process.cwd(),
@@ -28,19 +26,11 @@ export async function discoverRoutes(
     'src/pages/**/*.{js,jsx,ts,tsx}',
   ];
 
-  const files = await glob(routePatterns, {
+  const routes = await glob(routePatterns, {
     cwd: rootDir,
     ignore: [...NEXTJS_IGNORE_PATTERNS, '**/api/**'],
     absolute: false,
   });
-
-  const routes: RouteInfo[] = [];
-
-  for (const filePath of files) {
-    const fileName = path.basename(filePath);
-    const routeInfo = analyzeRoute(filePath, fileName);
-    routes.push(routeInfo);
-  }
 
   return routes;
 }
