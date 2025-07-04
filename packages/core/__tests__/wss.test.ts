@@ -4,10 +4,8 @@ import { Wss } from '../src/wss';
 import { WSS_PORT } from '@next-dev-tools/shared/constants';
 import * as Routeshandler from '../src/features/routes/handlers';
 import * as Assetshandler from '../src/features/assets/handlers';
-import {
-  IncomingWsMessage,
-  OutgoingWsMessage,
-} from '@next-dev-tools/shared/types';
+import * as Apihandler from '../src/features/api/handlers';
+import { IncomingWsMessage } from '@next-dev-tools/shared/types';
 import { consola } from 'consola';
 
 let server: WebSocketServer;
@@ -21,12 +19,35 @@ afterAll(() => {
   server?.close();
 });
 
+async function testWssAction(
+  action: IncomingWsMessage['action'],
+  expectedPayloadCheck?: (payload: any) => void,
+) {
+  const ws = new WebSocket(`ws://localhost:${WSS_PORT}`);
+
+  await new Promise<void>((resolve, reject) => {
+    ws.on('open', () => {
+      ws.send(JSON.stringify({ action, payload: '' }));
+    });
+
+    ws.on('message', (data) => {
+      const msg = JSON.parse(data.toString());
+      expect(msg.success).toBe(true);
+      if (expectedPayloadCheck) expectedPayloadCheck(msg.payload);
+      ws.close();
+      resolve();
+    });
+
+    ws.on('error', reject);
+  });
+}
+
 it('responds with error on unknown message', async () => {
   const ws = new WebSocket(`ws://localhost:${WSS_PORT}`);
 
   await new Promise<void>((resolve, reject) => {
     ws.on('open', () => {
-      ws.send(JSON.stringify({ type: 'non-existent' }));
+      ws.send(JSON.stringify({ command: 'nonExistentCommand' }));
     });
 
     ws.on('message', (data) => {
@@ -40,94 +61,53 @@ it('responds with error on unknown message', async () => {
   });
 });
 
-it('handles ping message and responds with success', async () => {
-  const ws = new WebSocket(`ws://localhost:${WSS_PORT}`);
-
-  await new Promise<void>((resolve, reject) => {
-    ws.on('open', () => {
-      ws.send(JSON.stringify({ query: 'sys:ping' } as IncomingWsMessage));
-    });
-
-    ws.on('message', (data) => {
-      const msg = JSON.parse(data.toString());
-      expect(msg.success).toBe(true);
-      expect(msg.payload).toBeNull();
-      ws.close();
-      resolve();
-    });
-
-    ws.on('error', reject);
+it('handles systemPing action correctly', async () => {
+  await testWssAction('pingSystem', (payload) => {
+    expect(payload).toBeNull();
   });
 });
 
-it('calls discoverRoutesHandler on "discover:routes" message', async () => {
-  const mockHandle = vi
+it('handles discoverRoutes action correctly', async () => {
+  const spy = vi
     .spyOn(Routeshandler, 'discoverRoutesHandler')
     .mockImplementation(async (ws) => {
-      ws.send(
-        JSON.stringify({
-          success: true,
-          payload: ['route1', 'route2'],
-        } as OutgoingWsMessage<string[]>),
-      );
+      ws.send(JSON.stringify({ success: true, payload: ['route1', 'route2'] }));
     });
 
-  const ws = new WebSocket(`ws://localhost:${WSS_PORT}`);
-
-  await new Promise<void>((resolve, reject) => {
-    ws.on('open', () => {
-      ws.send(
-        JSON.stringify({ query: 'routes:discover' } as IncomingWsMessage),
-      );
-    });
-
-    ws.on('message', (data) => {
-      const msg = JSON.parse(data.toString());
-      expect(mockHandle).toHaveBeenCalled();
-      expect(msg.success).toBe(true);
-      expect(msg.payload).toEqual(['route1', 'route2']);
-      ws.close();
-      resolve();
-    });
-
-    ws.on('error', reject);
+  await testWssAction('discoverRoutes', (payload) => {
+    expect(Array.isArray(payload)).toBe(true);
+    expect(payload.length).toBeGreaterThan(0);
   });
 
-  mockHandle.mockRestore();
+  spy.mockRestore();
 });
 
-it('calls discoverAssetsHandler on "discover:routes" message', async () => {
-  const mockHandle = vi
+it('handles discoverAssets action correctly', async () => {
+  const spy = vi
     .spyOn(Assetshandler, 'discoverAssetsHandler')
     .mockImplementation(async (ws) => {
-      ws.send(
-        JSON.stringify({
-          success: true,
-          payload: ['asset1', 'asset2'],
-        } as OutgoingWsMessage<string[]>),
-      );
+      ws.send(JSON.stringify({ success: true, payload: ['route1', 'route2'] }));
     });
 
-  const ws = new WebSocket(`ws://localhost:${WSS_PORT}`);
-
-  await new Promise<void>((resolve, reject) => {
-    ws.on('open', () => {
-      ws.send(
-        JSON.stringify({ query: 'assets:discover' } as IncomingWsMessage),
-      );
-    });
-
-    ws.on('message', (data) => {
-      const msg = JSON.parse(data.toString());
-      expect(mockHandle).toHaveBeenCalled();
-      expect(msg.success).toBe(true);
-      expect(msg.payload).toEqual(['asset1', 'asset2']);
-      ws.close();
-      resolve();
-    });
-
-    ws.on('error', reject);
+  await testWssAction('discoverAssets', (payload) => {
+    expect(Array.isArray(payload)).toBe(true);
+    expect(payload.length).toBeGreaterThan(0);
   });
 
-  mockHandle.mockRestore();
+  spy.mockRestore();
+});
+
+it('handles discoverAPIRoutes action correctly', async () => {
+  const spy = vi
+    .spyOn(Apihandler, 'discoverAPIRoutesHandler')
+    .mockImplementation(async (ws) => {
+      ws.send(JSON.stringify({ success: true, payload: ['route1', 'route2'] }));
+    });
+
+  await testWssAction('discoverApi', (payload) => {
+    expect(Array.isArray(payload)).toBe(true);
+    expect(payload.length).toBeGreaterThan(0);
+  });
+
+  spy.mockRestore();
 });

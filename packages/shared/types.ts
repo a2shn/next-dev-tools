@@ -1,12 +1,10 @@
 import { HTTP_METHODS } from './constants';
 
 export type httpMethod = (typeof HTTP_METHODS)[number];
-
 export interface IncomingWsMessage {
-  query: 'assets:discover' | 'routes:discover' | 'sys:ping';
+  action: 'discoverApi' | 'discoverAssets' | 'discoverRoutes' | 'pingSystem';
   payload: string;
 }
-
 export type OutgoingWsMessage<T> =
   | {
       success: true;
