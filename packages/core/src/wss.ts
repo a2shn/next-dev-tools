@@ -5,6 +5,7 @@ import { WebSocketServer } from 'ws';
 import { respond } from './lib/utils';
 import { discoverRoutesHandler } from './features/routes/handlers';
 import { discoverAssetsHandler } from './features/assets/handlers';
+import { discoverAPIRoutesHandler } from './features/api/handlers';
 
 export async function Wss(): Promise<WebSocketServer> {
   const port = WSS_PORT;
@@ -22,14 +23,17 @@ export async function Wss(): Promise<WebSocketServer> {
       try {
         const message = JSON.parse(data.toString()) as IncomingWsMessage;
 
-        switch (message.query) {
-          case 'assets:discover':
+        switch (message.action) {
+          case 'discoverApi':
+            await discoverAPIRoutesHandler(ws);
+            break;
+          case 'discoverAssets':
             await discoverAssetsHandler(ws);
             break;
-          case 'routes:discover':
+          case 'discoverRoutes':
             await discoverRoutesHandler(ws);
             break;
-          case 'sys:ping':
+          case 'pingSystem':
             respond(ws, {
               success: true,
               payload: null,
@@ -37,7 +41,7 @@ export async function Wss(): Promise<WebSocketServer> {
             break;
           default:
             consola.error(
-              new Error(`[DEVTOOLS] Unknown message type: ${message.query}`),
+              new Error(`[DEVTOOLS] Unknown action: ${message.action}`),
             );
             respond(ws, {
               success: false,

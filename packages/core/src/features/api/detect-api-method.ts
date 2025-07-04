@@ -1,5 +1,5 @@
 import * as parser from '@babel/parser';
-import traverse from '@babel/traverse';
+import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
 import { HTTP_METHODS } from '@next-dev-tools/shared/constants';
 import { httpMethod } from '@next-dev-tools/shared/types';
@@ -12,8 +12,10 @@ export async function detectAPIMethod(code: string): Promise<httpMethod[]> {
     plugins: ['jsx', 'typescript'],
   });
 
-  traverse(ast, {
-    ExportNamedDeclaration(path) {
+  const realTraverse = (traverse as any).default || traverse;
+
+  realTraverse(ast, {
+    ExportNamedDeclaration(path: NodePath<any>) {
       const declaration = path.node.declaration;
 
       if (

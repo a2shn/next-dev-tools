@@ -8,7 +8,7 @@ export default defineConfig({
   splitting: false,
   clean: true,
   bundle: true,
-  sourcemap: 'inline',
+  sourcemap: true,
   noExternal: Object.keys(pkg.dependencies ?? {}).filter((name) =>
     name.startsWith('@next-dev-tools'),
   ),
@@ -16,6 +16,5 @@ export default defineConfig({
     ...Object.keys(pkg.dependencies ?? {}).filter(
       (name) => !name.startsWith('@next-dev-tools'),
     ),
-    ...Object.keys(pkg.peerDependencies ?? {}),
   ],
 });
