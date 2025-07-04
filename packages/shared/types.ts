@@ -1,3 +1,7 @@
+import { HTTP_METHODS } from './constants';
+
+export type httpMethod = (typeof HTTP_METHODS)[number];
+
 export interface IncomingWsMessage {
   query: 'assets:discover' | 'routes:discover' | 'sys:ping';
   payload: string;
