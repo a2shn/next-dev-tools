@@ -48,3 +48,12 @@ export const NEXTJS_IGNORE_PATTERNS = [
   '.eslintcache',
   '.stylelintcache',
 ];
+export const HTTP_METHODS = [
+  'GET',
+  'POST',
+  'PUT',
+  'PATCH',
+  'DELETE',
+  'OPTIONS',
+  'HEAD',
+] as const;

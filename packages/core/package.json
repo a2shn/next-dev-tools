@@ -17,6 +17,9 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@babel/parser": "^7.28.0",
+    "@babel/traverse": "^7.28.0",
+    "@babel/types": "^7.28.0",
     "@next-dev-tools/shared": "workspace:*",
     "consola": "^3.4.2",
     "next": "15.3.4",
@@ -25,6 +28,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.16.1",
+    "@types/babel__traverse": "^7.20.7",
     "@types/node": "^24.0.4",
     "@types/ws": "^8.18.1",
     "eslint": "^9.29.0",
