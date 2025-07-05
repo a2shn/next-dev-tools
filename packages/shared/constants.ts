@@ -14,7 +14,6 @@ export const NEXTJS_IGNORE_PATTERNS = [
   '*.swp',
   '*.swo',
   '*~',
-  '.env*',
   '.DS_Store',
   'Thumbs.db',
   'desktop.ini',

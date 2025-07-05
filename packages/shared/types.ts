@@ -27,3 +27,8 @@ export interface APIRouteInfo {
   path: string;
   method?: httpMethod[];
 }
+
+export interface EnvFileInfo {
+  path: string;
+  content: Record<string, string>;
+}
