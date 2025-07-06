@@ -22,6 +22,7 @@
     "@babel/types": "^7.28.0",
     "@next-dev-tools/shared": "workspace:*",
     "consola": "^3.4.2",
+    "envfile": "^7.1.0",
     "next": "15.3.4",
     "tinyglobby": "^0.2.14",
     "ws": "^8.18.2"
