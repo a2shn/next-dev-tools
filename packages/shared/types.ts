@@ -3,13 +3,21 @@ import { HTTP_METHODS } from './constants';
 export type httpMethod = (typeof HTTP_METHODS)[number];
 export interface IncomingWsMessage {
   action:
+    | 'updateEnv'
     | 'discoverEnv'
     | 'discoverApi'
     | 'discoverAssets'
     | 'discoverRoutes'
     | 'pingSystem';
-  payload: string;
+  payload: any;
 }
+
+export interface updateEnvPayload {
+  rootDir: string;
+  filePath: string;
+  updates: Record<string, string>;
+}
+
 export type OutgoingWsMessage<T> =
   | {
       success: true;

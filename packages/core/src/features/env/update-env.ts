@@ -1,6 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
+// @ts-ignore
 import { parse, stringify } from 'envfile';
+import { updateEnvPayload } from '@next-dev-tools/shared/types';
 
 function safeParseEnv(raw: string): Record<string, string> {
   const lines = raw.split('\n');
@@ -11,11 +13,9 @@ function safeParseEnv(raw: string): Record<string, string> {
 export async function updateEnv({
   filePath,
   updates,
-}: {
-  filePath: string;
-  updates: Record<string, string>;
-}) {
-  const absPath = path.resolve(filePath);
+  rootDir,
+}: updateEnvPayload) {
+  const absPath = path.resolve(rootDir, filePath);
 
   try {
     await fs.access(absPath);

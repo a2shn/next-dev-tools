@@ -5,6 +5,7 @@ import { WSS_PORT } from '@next-dev-tools/shared/constants';
 import * as Routeshandler from '../src/features/routes/handlers';
 import * as Assetshandler from '../src/features/assets/handlers';
 import * as Apihandler from '../src/features/api/handlers';
+import * as Envhandler from '../src/features/env/handlers';
 import { IncomingWsMessage } from '@next-dev-tools/shared/types';
 import { consola } from 'consola';
 
@@ -90,6 +91,36 @@ it('handles discoverAssets action correctly', async () => {
     });
 
   await testWssAction('discoverAssets', (payload) => {
+    expect(Array.isArray(payload)).toBe(true);
+    expect(payload.length).toBeGreaterThan(0);
+  });
+
+  spy.mockRestore();
+});
+
+it('handles discoverEnv action correctly', async () => {
+  const spy = vi
+    .spyOn(Envhandler, 'discoverEnvHandler')
+    .mockImplementation(async (ws) => {
+      ws.send(JSON.stringify({ success: true, payload: ['route1', 'route2'] }));
+    });
+
+  await testWssAction('discoverEnv', (payload) => {
+    expect(Array.isArray(payload)).toBe(true);
+    expect(payload.length).toBeGreaterThan(0);
+  });
+
+  spy.mockRestore();
+});
+
+it('handles updateEnv action correctly', async () => {
+  const spy = vi
+    .spyOn(Envhandler, 'updateEnvHandler')
+    .mockImplementation(async (ws) => {
+      ws.send(JSON.stringify({ success: true, payload: ['route1', 'route2'] }));
+    });
+
+  await testWssAction('updateEnv', (payload) => {
     expect(Array.isArray(payload)).toBe(true);
     expect(payload.length).toBeGreaterThan(0);
   });
