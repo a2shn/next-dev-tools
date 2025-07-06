@@ -29,11 +29,11 @@ it('discoverEnv finds and parses env files', async () => {
   expect(result).toEqual([
     {
       path: '.env',
-      content: { FOO: 'bar', HELLO: 'world' },
+      content: 'FOO=bar\nHELLO=world',
     },
     {
       path: '.env.local',
-      content: { LOCAL: 'test' },
+      content: 'LOCAL=test',
     },
   ]);
 });

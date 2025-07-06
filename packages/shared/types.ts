@@ -2,7 +2,12 @@ import { HTTP_METHODS } from './constants';
 
 export type httpMethod = (typeof HTTP_METHODS)[number];
 export interface IncomingWsMessage {
-  action: 'discoverApi' | 'discoverAssets' | 'discoverRoutes' | 'pingSystem';
+  action:
+    | 'discoverEnv'
+    | 'discoverApi'
+    | 'discoverAssets'
+    | 'discoverRoutes'
+    | 'pingSystem';
   payload: string;
 }
 export type OutgoingWsMessage<T> =
@@ -30,5 +35,5 @@ export interface APIRouteInfo {
 
 export interface EnvFileInfo {
   path: string;
-  content: Record<string, string>;
+  content: string;
 }

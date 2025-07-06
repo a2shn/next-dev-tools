@@ -6,6 +6,7 @@ import { respond } from './lib/utils';
 import { discoverRoutesHandler } from './features/routes/handlers';
 import { discoverAssetsHandler } from './features/assets/handlers';
 import { discoverAPIRoutesHandler } from './features/api/handlers';
+import { discoverEnvHandler } from './features/env/handlers';
 
 export async function Wss(): Promise<WebSocketServer> {
   const port = WSS_PORT;
@@ -24,6 +25,9 @@ export async function Wss(): Promise<WebSocketServer> {
         const message = JSON.parse(data.toString()) as IncomingWsMessage;
 
         switch (message.action) {
+          case 'discoverEnv':
+            await discoverEnvHandler(ws);
+            break;
           case 'discoverApi':
             await discoverAPIRoutesHandler(ws);
             break;
