@@ -7,11 +7,18 @@ import { updateEnv } from './features/env/update-env';
 import { IncomingWsMessage } from '@next-dev-tools/shared/types';
 import { WebSocket } from 'ws';
 import consola from 'consola';
+import { readPackageJson } from './features/packages/read-package-json';
 
 export async function handleAction(ws: WebSocket, message: IncomingWsMessage) {
   const rootDir = process.cwd();
   try {
     switch (message.action) {
+      case 'readPackageJson':
+        respond(ws, {
+          success: true,
+          payload: await readPackageJson(rootDir),
+        });
+        break;
       case 'updateEnv':
         respond(ws, {
           success: true,
