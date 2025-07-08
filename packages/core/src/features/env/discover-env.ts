@@ -3,6 +3,8 @@ import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
 import fs from 'fs/promises';
 import path from 'path';
 import { EnvFileInfo } from '@next-dev-tools/shared/types';
+// @ts-ignore
+import { parse } from 'envfile';
 
 export async function discoverEnv(
   rootDir: string = process.cwd(),
@@ -23,7 +25,7 @@ export async function discoverEnv(
 
       return {
         path: file,
-        content,
+        content: parse(content),
       };
     }),
   );
