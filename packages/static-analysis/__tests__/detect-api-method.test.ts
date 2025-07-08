@@ -4,7 +4,7 @@ import {
   deleteDummy,
   testDirPath,
 } from '../__fixtures__/utils';
-import { detectAPIMethod } from '../src/features/api/detect-api-method';
+import { detectAPIMethod } from '../src/detect-api-method';
 import fs from 'fs';
 import path from 'path';
 
