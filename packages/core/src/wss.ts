@@ -1,16 +1,13 @@
 import { WSS_PORT } from '@next-dev-tools/shared/constants';
-import type { IncomingWsMessage } from '@next-dev-tools/shared/types';
 import { consola } from 'consola';
 import { WebSocketServer } from 'ws';
 import { respond } from './lib/utils';
-import { discoverRoutesHandler } from './features/routes/handlers';
-import { discoverAssetsHandler } from './features/assets/handlers';
-import { discoverAPIRoutesHandler } from './features/api/handlers';
-import { discoverEnvHandler, updateEnvHandler } from './features/env/handlers';
+import { handleAction } from './handle-action';
+import { IncomingWsMessage } from '@next-dev-tools/shared/types';
 
 export async function Wss(): Promise<WebSocketServer> {
   const port = WSS_PORT;
-  const wss = new WebSocketServer({ port });
+  const wss = new WebSocketServer({ port, autoPong: true });
 
   consola.start(
     `[DEVTOOLS] 🛠  WebSocket Server starting on ws://localhost:${port}`,
@@ -23,41 +20,14 @@ export async function Wss(): Promise<WebSocketServer> {
     ws.on('message', async (data) => {
       try {
         const message = JSON.parse(data.toString()) as IncomingWsMessage;
-
-        switch (message.action) {
-          case 'updateEnv':
-            await updateEnvHandler(ws, message.payload);
-            break;
-          case 'discoverEnv':
-            await discoverEnvHandler(ws);
-            break;
-          case 'discoverApi':
-            await discoverAPIRoutesHandler(ws);
-            break;
-          case 'discoverAssets':
-            await discoverAssetsHandler(ws);
-            break;
-          case 'discoverRoutes':
-            await discoverRoutesHandler(ws);
-            break;
-          case 'pingSystem':
-            respond(ws, {
-              success: true,
-              payload: null,
-            });
-            break;
-          default:
-            consola.error(
-              new Error(`[DEVTOOLS] Unknown action: ${message.action}`),
-            );
-            respond(ws, {
-              success: false,
-              payload: [],
-              error: 'Unknown message',
-            });
-        }
-      } catch (err) {
+        await handleAction(ws, message);
+      } catch (err: any) {
         consola.error(new Error('[DEVTOOLS] Failed to parse message'));
+        respond(ws, {
+          success: false,
+          payload: [],
+          error: err.message,
+        });
       }
     });
 

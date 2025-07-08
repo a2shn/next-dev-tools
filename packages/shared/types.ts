@@ -7,8 +7,7 @@ export interface IncomingWsMessage {
     | 'discoverEnv'
     | 'discoverApi'
     | 'discoverAssets'
-    | 'discoverRoutes'
-    | 'pingSystem';
+    | 'discoverRoutes';
   payload: any;
 }
 
