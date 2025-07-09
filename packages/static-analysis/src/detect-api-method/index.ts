@@ -2,7 +2,7 @@ import * as parser from '@babel/parser';
 import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
 import { HTTP_METHODS } from '@next-dev-tools/shared/constants';
-import { httpMethod } from '@next-dev-tools/shared/types';
+import type { httpMethod } from '@next-dev-tools/shared/types';
 
 export async function detectAPIMethod(code: string): Promise<httpMethod[]> {
   const apiRouteMethods: httpMethod[] = [];

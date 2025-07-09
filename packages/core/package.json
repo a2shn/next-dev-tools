@@ -26,6 +26,7 @@
     "ws": "^8.18.2"
   },
   "devDependencies": {
+    "@next-dev-tools/config": "workspace:*",
     "@antfu/eslint-config": "^4.16.1",
     "@types/node": "^24.0.4",
     "@types/ws": "^8.18.1",

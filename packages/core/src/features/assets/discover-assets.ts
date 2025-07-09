@@ -2,7 +2,7 @@ import { glob } from 'tinyglobby';
 import { stat } from 'fs/promises';
 import path from 'path';
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
-import { AssetInfo } from '@next-dev-tools/shared/types';
+import type { AssetInfo } from '@next-dev-tools/shared/types';
 
 export async function discoverAssets(rootDir: string): Promise<AssetInfo[]> {
   const assetPatterns = [

@@ -3,7 +3,7 @@ import { consola } from 'consola';
 import { WebSocketServer } from 'ws';
 import { respond } from './lib/utils';
 import { handleAction } from './handle-action';
-import { IncomingWsMessage } from '@next-dev-tools/shared/types';
+import type { IncomingWsMessage } from '@next-dev-tools/shared/types';
 
 export async function Wss(): Promise<WebSocketServer> {
   const port = WSS_PORT;

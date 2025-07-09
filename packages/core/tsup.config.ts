@@ -37,6 +37,7 @@ function getExternalDepsFromWorkspaces(pkgPath: string): string[] {
 console.log(getExternalDepsFromWorkspaces('./package.json'));
 
 export default defineConfig({
+  outDir: 'dist',
   entry: ['src/index.ts'],
   dts: true,
   format: ['esm', 'cjs'],
