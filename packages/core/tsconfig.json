@@ -1,18 +1,6 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "baseUrl": ".",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "strict": true,
-    "declaration": true,
-    "outDir": "dist",
-    "esModuleInterop": true,
-    "skipLibCheck": true
-  },
+  "extends": ["@next-dev-tools/config/tsconfig.base.json"],
+
   "include": ["src"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
-}
+} 

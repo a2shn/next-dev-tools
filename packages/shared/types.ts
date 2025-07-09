@@ -43,5 +43,5 @@ export interface APIRouteInfo {
 
 export interface EnvFileInfo {
   path: string;
-  content: string;
+  content: Record<string, string>;
 }

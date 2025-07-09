@@ -1,5 +1,5 @@
 import { glob } from 'tinyglobby';
-import { RouteInfo } from '@next-dev-tools/shared/types';
+import type { RouteInfo } from '@next-dev-tools/shared/types';
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
 
 export async function discoverRoutes(

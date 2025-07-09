@@ -4,9 +4,9 @@ import { discoverAssets } from './features/assets/discover-assets';
 import { discoverAPIRoutes } from './features/api/discover-api-routes';
 import { discoverEnv } from './features/env/discover-env';
 import { updateEnv } from './features/env/update-env';
-import { IncomingWsMessage } from '@next-dev-tools/shared/types';
-import { WebSocket } from 'ws';
-import consola from 'consola';
+import type { IncomingWsMessage } from '@next-dev-tools/shared/types';
+import type { WebSocket } from 'ws';
+import { consola } from 'consola';
 import { readPackageJson } from './features/packages/read-package-json';
 
 export async function handleAction(ws: WebSocket, message: IncomingWsMessage) {

@@ -1,5 +1,5 @@
-import { OutgoingWsMessage } from '@next-dev-tools/shared/types';
-import consola from 'consola';
+import type { OutgoingWsMessage } from '@next-dev-tools/shared/types';
+import { consola } from 'consola';
 import type { WebSocket } from 'ws';
 
 export function respond<T>(

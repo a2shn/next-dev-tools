@@ -2,7 +2,7 @@ import { glob } from 'tinyglobby';
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
 import fs from 'fs/promises';
 import path from 'path';
-import { EnvFileInfo } from '@next-dev-tools/shared/types';
+import type { EnvFileInfo } from '@next-dev-tools/shared/types';
 // @ts-ignore
 import { parse } from 'envfile';
 

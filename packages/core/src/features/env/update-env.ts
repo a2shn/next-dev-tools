@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 // @ts-ignore
 import { parse, stringify } from 'envfile';
-import { updateEnvPayload } from '@next-dev-tools/shared/types';
+import type { updateEnvPayload } from '@next-dev-tools/shared/types';
 
 function safeParseEnv(raw: string): Record<string, string> {
   const lines = raw.split('\n');
