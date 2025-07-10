@@ -1,10 +1,10 @@
 import { it, expect, beforeAll, afterAll } from 'vitest';
-import { discoverEnv } from '../src/features/env/discover-env';
+import { discoverEnv } from './discover-env';
 import {
   createDummyWithContent,
   deleteDummy,
   testDirPath,
-} from '../__fixtures__/utils';
+} from '@next-dev-tools/shared/test-utils';
 
 const dir = 'env-test';
 

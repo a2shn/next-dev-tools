@@ -3,8 +3,8 @@ import {
   createDummyWithContent,
   deleteDummy,
   testDirPath,
-} from '../__fixtures__/utils';
-import { detectAPIMethod } from '../src/detect-api-method';
+} from '@next-dev-tools/shared/test-utils';
+import { detectAPIMethod } from './index';
 import fs from 'fs';
 import path from 'path';
 

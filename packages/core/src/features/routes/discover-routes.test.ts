@@ -1,6 +1,10 @@
 import { it, beforeAll, afterAll, expect } from 'vitest';
-import { discoverRoutes } from '../src/features/routes/discover-routes';
-import { createDummy, deleteDummy, testDirPath } from '../__fixtures__/utils';
+import { discoverRoutes } from './discover-routes';
+import {
+  createDummy,
+  deleteDummy,
+  testDirPath,
+} from '@next-dev-tools/shared/test-utils';
 import { RouteInfo } from '@next-dev-tools/shared/types';
 
 let routes: RouteInfo[] = [];

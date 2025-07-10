@@ -1,10 +1,10 @@
 import { it, expect, beforeAll, afterAll } from 'vitest';
-import { updateEnv } from '../src/features/env/update-env';
+import { updateEnv } from './update-env';
 import {
   createDummyWithContent,
   deleteDummy,
   testDirPath,
-} from '../__fixtures__/utils';
+} from '@next-dev-tools/shared/test-utils';
 import { parse } from 'envfile';
 import fs from 'fs/promises';
 import path from 'path';

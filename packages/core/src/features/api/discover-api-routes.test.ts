@@ -1,10 +1,10 @@
 import { it, beforeAll, afterAll, expect } from 'vitest';
-import { discoverAPIRoutes } from '../src/features/api/discover-api-routes';
+import { discoverAPIRoutes } from './discover-api-routes';
 import {
   createDummyWithContent,
   deleteDummy,
   testDirPath,
-} from '../__fixtures__/utils';
+} from '@next-dev-tools/shared/test-utils';
 import { APIRouteInfo } from '@next-dev-tools/shared/types';
 
 let routes: APIRouteInfo[] = [];

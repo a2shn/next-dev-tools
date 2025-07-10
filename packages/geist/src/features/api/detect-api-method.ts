@@ -1,21 +1,16 @@
-import * as parser from '@babel/parser';
-import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
 import { HTTP_METHODS } from '@next-dev-tools/shared/constants';
 import type { httpMethod } from '@next-dev-tools/shared/types';
+import { parse } from '../../lib/parse';
+import { traverseAst } from '../../lib/traverse';
 
 export async function detectAPIMethod(code: string): Promise<httpMethod[]> {
   const apiRouteMethods: httpMethod[] = [];
 
-  const ast = parser.parse(code, {
-    sourceType: 'module',
-    plugins: ['jsx', 'typescript'],
-  });
+  const ast = parse(code);
 
-  const realTraverse = (traverse as any).default || traverse;
-
-  realTraverse(ast, {
-    ExportNamedDeclaration(path: NodePath<any>) {
+  traverseAst(ast, {
+    ExportNamedDeclaration(path) {
       const declaration = path.node.declaration;
 
       if (

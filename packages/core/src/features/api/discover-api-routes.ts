@@ -1,7 +1,7 @@
 import { glob } from 'tinyglobby';
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
 import type { APIRouteInfo } from '@next-dev-tools/shared/types';
-import { detectAPIMethod } from '@next-dev-tools/static-analysis';
+import { detectAPIMethod } from '@next-dev-tools/geist';
 import fs from 'fs/promises';
 import path from 'path';
 
