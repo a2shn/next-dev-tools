@@ -1,10 +1,10 @@
 import { it, beforeAll, afterAll, expect } from 'vitest';
-import { readPackageJson } from '../src/features/packages/read-package-json';
+import { readPackageJson } from './read-package-json';
 import {
   createDummyWithContent,
   deleteDummy,
   testDirPath,
-} from '../__fixtures__/utils';
+} from '@next-dev-tools/shared/test-utils';
 
 const dir = 'read-package-json-test';
 

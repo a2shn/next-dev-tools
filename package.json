@@ -5,14 +5,15 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "test": "turbo test",
+    "test": "vitest run",
     "format": "prettier . --write"
   },
   "devDependencies": {
+    "prettier": "3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.13",
     "turbo": "^2.5.4",
     "typescript": "^5",
-    "prettier": "3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.13"
+    "vitest": "^3.2.4"
   },
   "packageManager": "pnpm@10.12.3+sha512.467df2c586056165580ad6dfb54ceaad94c5a30f80893ebdec5a44c5aa73c205ae4a5bb9d5ed6bb84ea7c249ece786642bbb49d06a307df218d03da41c317417"
 }

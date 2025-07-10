@@ -1,6 +1,10 @@
 import { beforeAll, afterAll, it, expect } from 'vitest';
-import { discoverAssets } from '../src/features/assets/discover-assets';
-import { createDummy, deleteDummy, testDirPath } from '../__fixtures__/utils';
+import { discoverAssets } from './discover-assets';
+import {
+  createDummy,
+  deleteDummy,
+  testDirPath,
+} from '@next-dev-tools/shared/test-utils';
 import { AssetInfo } from '@next-dev-tools/shared/types';
 
 const testDirName = 'dummy-assets';

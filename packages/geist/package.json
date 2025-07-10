@@ -1,11 +1,10 @@
 {
-  "name": "@next-dev-tools/static-analysis",
+  "name": "@next-dev-tools/geist",
   "type": "module",
   "version": "0.0.0",
   "main": "./index.ts",
   "scripts": {
     "build": "tsc -b",
-    "test": "vitest run",
     "lint": "eslint . --fix"
   },
   "dependencies": {
@@ -20,7 +19,6 @@
     "@types/babel__traverse": "^7.20.7",
     "@types/node": "^24.0.4",
     "eslint": "^9.29.0",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "typescript": "^5.8.3"
   }
 }

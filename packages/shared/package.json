@@ -1,5 +1,8 @@
 {
   "name": "@next-dev-tools/shared",
   "version": "0.0.0",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^24.0.4"
+  }
 }

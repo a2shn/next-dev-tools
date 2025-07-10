@@ -24,7 +24,7 @@ export function createDummy({ files, dir }: { files: string[]; dir: string }) {
   for (const file of files) {
     const fullPath = path.join(fixturesDir, dir, file);
     fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-    fs.writeFileSync(fullPath, '// dummy content\n');
+    fs.writeFileSync(fullPath, '');
   }
 }
 
