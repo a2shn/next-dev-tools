@@ -1,6 +1,7 @@
 import * as parser from '@babel/parser';
+import type { File } from '@babel/types';
 
-export function parse(code: string) {
+export function parse(code: string): parser.ParseResult<File> {
   return parser.parse(code, {
     sourceType: 'module',
     plugins: [

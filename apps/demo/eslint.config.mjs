@@ -1,6 +1,3 @@
-import antfu from '@antfu/eslint-config';
+import { eslintConfigApp } from '@next-dev-tools/config/eslint.config.mjs';
 
-export default antfu({
-  react: true,
-  formatters: true,
-});
+export default eslintConfigApp;

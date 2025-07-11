@@ -1,6 +1,6 @@
+import type { httpMethod } from '@next-dev-tools/shared/types';
 import * as t from '@babel/types';
 import { HTTP_METHODS } from '@next-dev-tools/shared/constants';
-import type { httpMethod } from '@next-dev-tools/shared/types';
 import { parse } from '../../lib/parse';
 import { traverseAst } from '../../lib/traverse';
 

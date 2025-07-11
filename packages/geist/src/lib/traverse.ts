@@ -1,4 +1,4 @@
-import traverse from '@babel/traverse';
+import traverse from '@babel/traverse'
 
-export const traverseAst: typeof traverse =
-  (traverse as any).default || traverse;
+export const traverseAst: typeof traverse
+  = (traverse as any).default || traverse
