@@ -1,6 +1,3 @@
-import antfu from '@antfu/eslint-config';
+import { eslintConfigLib } from '@next-dev-tools/config/eslint.config.mjs';
 
-export default antfu({
-  type: 'lib',
-  formatters: true,
-});
+export default eslintConfigLib;

@@ -1,1 +1,1 @@
-export * from './src/features/api/detect-api-method';
+export * from './src/features/api/detect-api-method'
