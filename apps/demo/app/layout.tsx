@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { NextDevTools } from '@next-dev-tools/client';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
@@ -28,7 +27,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NextDevTools>{children}</NextDevTools>
+        {children}
       </body>
     </html>
   );
