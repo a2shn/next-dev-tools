@@ -45,3 +45,45 @@ export interface EnvFileInfo {
   path: string;
   content: Record<string, string>;
 }
+
+export interface RoutingAnalysis {
+  strategy: 'SSG' | 'ISR' | 'SSR';
+  rationale: string[];
+  dynamicSegments: string[];
+  routeType: 'page' | 'layout' | 'api' | 'middleware' | 'unknown';
+}
+
+export interface DetectedFeatures {
+  hasGetStaticProps: boolean;
+  hasGetServerSideProps: boolean;
+  hasGetStaticPaths: boolean;
+  hasGenerateStaticParams: boolean;
+  hasGenerateMetadata: boolean;
+  hasMetadata: boolean;
+  hasRevalidate: boolean;
+  revalidateValue: number | boolean | undefined;
+  runtime: string | undefined;
+  fetchCache: string | undefined;
+  dynamic: string | undefined;
+  usesCookies: boolean;
+  usesHeaders: boolean;
+  usesSearchParams: boolean;
+  usesNotFound: boolean;
+  usesRedirect: boolean;
+  usesUnstableCache: boolean;
+  hasFetchWithNoStore: boolean;
+  hasFetchWithForceCache: boolean;
+  hasFetchWithRevalidate: boolean;
+  isClientComponent: boolean;
+  hasUseEffect: boolean;
+  hasUseState: boolean;
+}
+
+export interface PathAnalysis {
+  isAppRouter: boolean;
+  isPagesRouter: boolean;
+  isDynamic: boolean;
+  dynamicSegments: string[];
+  routeType: 'page' | 'layout' | 'api' | 'middleware' | 'unknown';
+  segments: string[];
+}
