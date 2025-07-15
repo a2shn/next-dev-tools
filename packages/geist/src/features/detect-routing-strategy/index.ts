@@ -1,6 +1,6 @@
 import * as t from '@babel/types';
 import type { RoutingAnalysis } from '@next-dev-tools/shared/types';
-import { analyzePath } from './analyze-path';
+import { analyzePath } from '../../lib/analyze-path';
 import { analyzeVariable } from './analyze-variable';
 import { analyzeObject } from './analyze-object';
 import { analyzeFunction } from './analyze-function';
