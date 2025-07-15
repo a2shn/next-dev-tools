@@ -49,7 +49,7 @@ export interface EnvFileInfo {
 export interface RoutingAnalysis {
   strategy: 'SSG' | 'ISR' | 'SSR';
   rationale: string[];
-  dynamicSegments: string[];
+  dynamicSegments: DynamicSegment[];
   routeType: 'page' | 'layout' | 'api' | 'middleware' | 'unknown';
 }
 
@@ -79,11 +79,20 @@ export interface DetectedFeatures {
   hasUseState: boolean;
 }
 
+export interface DynamicSegment {
+  segment: string;
+  catchAll: boolean;
+  optional: boolean;
+  position: number;
+  isFilename: boolean;
+  originalPattern: string;
+}
+
 export interface PathAnalysis {
   isAppRouter: boolean;
   isPagesRouter: boolean;
   isDynamic: boolean;
-  dynamicSegments: string[];
+  dynamicSegments: DynamicSegment[];
   routeType: 'page' | 'layout' | 'api' | 'middleware' | 'unknown';
   segments: string[];
 }
