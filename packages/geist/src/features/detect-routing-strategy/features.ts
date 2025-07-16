@@ -1,6 +1,8 @@
 import type { DetectedFeatures } from '@next-dev-tools/shared/types';
 
-export function createFeatures(): DetectedFeatures {
+export function createFeatures(
+  overrides?: Partial<DetectedFeatures>,
+): DetectedFeatures {
   return {
     hasGetStaticProps: false,
     hasGetServerSideProps: false,
@@ -25,5 +27,6 @@ export function createFeatures(): DetectedFeatures {
     isClientComponent: false,
     hasUseEffect: false,
     hasUseState: false,
+    ...overrides,
   };
 }
