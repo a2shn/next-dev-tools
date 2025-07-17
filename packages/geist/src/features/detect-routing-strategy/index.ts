@@ -10,7 +10,7 @@ import { parse } from '../../lib/parse';
 import { traverseAst } from '../../lib/traverse';
 import { createFeatures } from './features';
 
-export function detetRoutingStrategy(
+export function detectRoutingStrategy(
   code: string,
   filePath: string,
 ): RoutingAnalysis {
@@ -21,20 +21,21 @@ export function detetRoutingStrategy(
   const features = createFeatures();
 
   traverseAst(ast, {
-    Program: (path) => {
-      const firstStatement = path.node.body[0];
-      if (
-        t.isExpressionStatement(firstStatement) &&
-        t.isStringLiteral(firstStatement.expression) &&
-        firstStatement.expression.value === 'use client'
-      ) {
+    Program(path) {
+      const hasUseClient = path.node.directives.some((d) =>
+        /^use client$/i.test(d.value.value.trim()),
+      );
+
+      if (hasUseClient) {
         features.isClientComponent = true;
       }
     },
 
-    ExportNamedDeclaration: (path) => {
-      if (t.isFunctionDeclaration(path.node.declaration)) {
-        const name = path.node.declaration.id?.name;
+    ExportNamedDeclaration(path) {
+      const node = path.node.declaration;
+
+      if (t.isFunctionDeclaration(node)) {
+        const name = node.id?.name;
         if (name === 'getStaticProps') features.hasGetStaticProps = true;
         if (name === 'getServerSideProps')
           features.hasGetServerSideProps = true;
@@ -44,8 +45,27 @@ export function detetRoutingStrategy(
         if (name === 'generateMetadata') features.hasGenerateMetadata = true;
       }
 
-      if (t.isVariableDeclaration(path.node.declaration)) {
-        analyzeVariable(path.node.declaration, features);
+      if (t.isVariableDeclaration(node)) {
+        for (const decl of node.declarations) {
+          const name = decl.id.type === 'Identifier' ? decl.id.name : null;
+          const init = decl.init;
+
+          if (!name || !init) continue;
+
+          if (
+            t.isArrowFunctionExpression(init) ||
+            t.isFunctionExpression(init)
+          ) {
+            if (name === 'getStaticProps') features.hasGetStaticProps = true;
+            if (name === 'getServerSideProps')
+              features.hasGetServerSideProps = true;
+            if (name === 'getStaticPaths') features.hasGetStaticPaths = true;
+            if (name === 'generateStaticParams')
+              features.hasGenerateStaticParams = true;
+            if (name === 'generateMetadata')
+              features.hasGenerateMetadata = true;
+          }
+        }
       }
     },
 
@@ -67,11 +87,10 @@ export function detetRoutingStrategy(
   });
 
   const analysis = determineStrategy(features, pathAnalysis);
-
   return {
     strategy: analysis.strategy,
     rationale: analysis.rationale,
-    dynamicSegments: pathAnalysis.dynamicSegments,
-    routeType: pathAnalysis.routeType,
+    detectedFeatures: features,
+    pathAnalysis,
   };
 }

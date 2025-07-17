@@ -28,6 +28,21 @@ it('detects only cookies from next/cookies', () => {
   expect(features.usesHeaders).toBe(false);
 });
 
+it('detects useSearchParams from next/navigation', () => {
+  const features = createFeatures();
+  const node = t.importDeclaration(
+    [
+      t.importSpecifier(
+        t.identifier('useSearchParams'),
+        t.identifier('useSearchParams'),
+      ),
+    ],
+    t.stringLiteral('next/navigation'),
+  );
+  analyzeImports(node, features);
+  expect(features.usesSearchParams).toBe(true);
+});
+
 it('detects notFound and redirect from next/navigation', () => {
   const features = createFeatures();
   const node = t.importDeclaration(

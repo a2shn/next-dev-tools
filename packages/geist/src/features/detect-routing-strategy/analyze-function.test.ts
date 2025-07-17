@@ -13,6 +13,10 @@ it('detects all known identifiers', () => {
   analyzeFunction(t.callExpression(t.identifier('notFound'), []), features);
   analyzeFunction(t.callExpression(t.identifier('redirect'), []), features);
   analyzeFunction(
+    t.callExpression(t.identifier('useLayoutEffect'), []),
+    features,
+  );
+  analyzeFunction(
     t.callExpression(t.identifier('unstable_cache'), []),
     features,
   );
@@ -24,6 +28,7 @@ it('detects all known identifiers', () => {
   expect(features.usesNotFound).toBe(true);
   expect(features.usesRedirect).toBe(true);
   expect(features.usesUnstableCache).toBe(true);
+  expect(features.hasUseLayoutEffect).toBe(true);
 });
 
 it('calls analyzeFetchCall when fetch is used', () => {

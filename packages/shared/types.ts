@@ -49,8 +49,8 @@ export interface EnvFileInfo {
 export interface RoutingAnalysis {
   strategy: 'SSG' | 'ISR' | 'SSR';
   rationale: string[];
-  dynamicSegments: DynamicSegment[];
-  routeType: 'page' | 'layout' | 'api' | 'middleware' | 'unknown';
+  pathAnalysis: PathAnalysis;
+  detectedFeatures: DetectedFeatures;
 }
 
 export interface DetectedFeatures {
@@ -73,8 +73,8 @@ export interface DetectedFeatures {
   usesUnstableCache: boolean;
   hasFetchWithNoStore: boolean;
   hasFetchWithForceCache: boolean;
-  hasFetchWithRevalidate: boolean;
   isClientComponent: boolean;
+  hasUseLayoutEffect: boolean;
   hasUseEffect: boolean;
   hasUseState: boolean;
 }
