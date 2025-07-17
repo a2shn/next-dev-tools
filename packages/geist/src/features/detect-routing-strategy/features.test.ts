@@ -7,7 +7,7 @@ it('detects getStaticProps (function declaration)', () => {
       return { props: {} }
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.hasGetStaticProps).toBe(true);
 });
 
@@ -17,7 +17,7 @@ it('detects getStaticProps (arrow declaration)', () => {
       return { props: {} }
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.hasGetStaticProps).toBe(true);
 });
 
@@ -27,7 +27,7 @@ it('detects getServerSideProps', () => {
       return { props: {} }
     }
   `;
-  const result = detectRoutingStrategy(code, 'pages/index.tsx');
+  const result = detectRoutingStrategy(code, '/pages/index.tsx');
   expect(result.detectedFeatures.hasGetServerSideProps).toBe(true);
 });
 
@@ -38,7 +38,7 @@ it('detects generateMetadata and generateStaticParams', () => {
       return []
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/blog/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/blog/page.tsx');
   expect(result.detectedFeatures.hasGenerateMetadata).toBe(true);
   expect(result.detectedFeatures.hasGenerateStaticParams).toBe(true);
 });
@@ -50,7 +50,7 @@ it('detects metadata object', () => {
       description: 'Example description'
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/layout.tsx');
+  const result = detectRoutingStrategy(code, '/app/layout.tsx');
   expect(result.detectedFeatures.hasMetadata).toBe(true);
 });
 
@@ -58,7 +58,7 @@ it('detects revalidate value', () => {
   const code = `
     export const revalidate = 60
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.hasRevalidate).toBe(true);
   expect(result.detectedFeatures.revalidateValue).toBe(60);
 });
@@ -67,7 +67,7 @@ it('detects runtime value', () => {
   const code = `
     export const runtime = 'edge'
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.runtime).toBe('edge');
 });
 
@@ -75,7 +75,7 @@ it('detects fetchCache value', () => {
   const code = `
     export const fetchCache = 'force-cache'
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.fetchCache).toBe('force-cache');
 });
 
@@ -83,7 +83,7 @@ it('detects dynamic value', () => {
   const code = `
     export const dynamic = 'force-dynamic'
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.dynamic).toBe('force-dynamic');
 });
 
@@ -95,7 +95,7 @@ it('detects cookies usage from next/headers', () => {
       return null
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.usesCookies).toBe(true);
 });
 
@@ -107,7 +107,7 @@ it('detects headers usage from next/headers', () => {
       return null
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.usesHeaders).toBe(true);
 });
 
@@ -119,7 +119,7 @@ it('detects useSearchParams usage from next/navigation', () => {
       return null
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.usesSearchParams).toBe(true);
 });
 
@@ -131,7 +131,7 @@ it('detects notFound usage', () => {
       return null
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.usesNotFound).toBe(true);
 });
 
@@ -142,7 +142,7 @@ it('detects redirect usage', () => {
       redirect('/home')
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.usesRedirect).toBe(true);
 });
 
@@ -152,7 +152,7 @@ it('detects unstable_cache usage', () => {
     const handler = unstable_cache(() => 'data')
     handler()
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.usesUnstableCache).toBe(true);
 });
 
@@ -163,7 +163,7 @@ it('detects fetch with no-store', () => {
       return null
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.hasFetchWithNoStore).toBe(true);
 });
 
@@ -174,7 +174,7 @@ it('detects fetch with force-cache', () => {
       return null
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.hasFetchWithForceCache).toBe(true);
 });
 
@@ -185,7 +185,7 @@ it('detects client component (use client directive)', () => {
       return null
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.isClientComponent).toBe(true);
 });
 
@@ -197,7 +197,7 @@ it('detects useEffect usage', () => {
       return null
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.hasUseEffect).toBe(true);
 });
 
@@ -209,7 +209,7 @@ it('detects useState usage', () => {
       return null
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.hasUseState).toBe(true);
 });
 
@@ -219,7 +219,7 @@ it('detects getStaticPaths (function declaration)', () => {
       return []
     }
   `;
-  const result = detectRoutingStrategy(code, 'pages/[slug].tsx');
+  const result = detectRoutingStrategy(code, '/pages/[slug].tsx');
   expect(result.detectedFeatures.hasGetStaticPaths).toBe(true);
 });
 
@@ -229,7 +229,7 @@ it('detects getStaticPaths (arrow function)', () => {
       return []
     }
   `;
-  const result = detectRoutingStrategy(code, 'pages/[slug].tsx');
+  const result = detectRoutingStrategy(code, '/pages/[slug].tsx');
   expect(result.detectedFeatures.hasGetStaticPaths).toBe(true);
 });
 
@@ -241,6 +241,6 @@ it('detects useLayoutEffect usage', () => {
       return null
     }
   `;
-  const result = detectRoutingStrategy(code, 'app/page.tsx');
+  const result = detectRoutingStrategy(code, '/app/page.tsx');
   expect(result.detectedFeatures.hasUseLayoutEffect).toBe(true);
 });

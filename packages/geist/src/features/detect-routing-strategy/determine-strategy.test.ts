@@ -128,6 +128,7 @@ describe('returns SSR on force-SSR conditions', () => {
     });
     const pathAnalysis = createPathAnalysis({
       isDynamic: true,
+      isAppRouter: true,
       dynamicSegments: [dynamicSegment],
     });
     const result = determineStrategy(features, pathAnalysis);
