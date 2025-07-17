@@ -23,6 +23,7 @@ export function analyzeImports(
         const name = spec.imported.name;
         if (name === 'notFound') features.usesNotFound = true;
         if (name === 'redirect') features.usesRedirect = true;
+        if (name === 'useSearchParams') features.usesSearchParams = true;
       }
     });
   }

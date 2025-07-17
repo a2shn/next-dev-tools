@@ -8,7 +8,7 @@ export function analyzeFunction(
 ) {
   if (t.isIdentifier(node.callee)) {
     const name = node.callee.name;
-
+    if (name === 'useLayoutEffect') features.hasUseLayoutEffect = true;
     if (name === 'useEffect') features.hasUseEffect = true;
     if (name === 'useState') features.hasUseState = true;
     if (name === 'cookies') features.usesCookies = true;
