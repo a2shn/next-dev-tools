@@ -32,8 +32,9 @@ export function determineStrategy(
   if (pathAnalysis.isAppRouter) {
     return determineAppRouterStrategy(features, pathAnalysis, rationale);
   }
-
-  return determineUnknownRouterStrategy(features, pathAnalysis, rationale);
+  throw new Error(
+    '[FATAL] Internal geist error: commit an issue on github. This e      rror originates from internal tooling and can only be solved by mainta      iners!',
+  );
 }
 
 function getForceSSRFeatures(
@@ -335,51 +336,6 @@ function determineClientComponentStrategy(
   }
 
   return { strategy: 'SSG' as const, rationale };
-}
-
-function determineUnknownRouterStrategy(
-  features: DetectedFeatures,
-  pathAnalysis: PathAnalysis,
-  rationale: string[],
-) {
-  rationale.push('Unknown router type - analyzing features');
-
-  if (features.isClientComponent) {
-    rationale.push('Client component');
-    if (features.hasUseEffect || features.hasUseState) {
-      rationale.push('Uses client-side React hooks');
-    }
-    return { strategy: 'SSG' as const, rationale };
-  }
-
-  if (
-    features.hasRevalidate &&
-    features.revalidateValue !== false &&
-    features.revalidateValue !== 0
-  ) {
-    rationale.push(`Revalidate configuration: ${features.revalidateValue}`);
-    return { strategy: 'ISR' as const, rationale };
-  }
-
-  if (
-    features.fetchCache === 'force-cache' ||
-    features.hasFetchWithForceCache
-  ) {
-    rationale.push('Force cache configuration');
-    return { strategy: 'SSG' as const, rationale };
-  }
-
-  if (pathAnalysis.isDynamic) {
-    addDynamicSegmentInfo(
-      pathAnalysis.dynamicSegments,
-      rationale,
-      'without static generation',
-    );
-    return { strategy: 'SSR' as const, rationale };
-  }
-
-  rationale.push('No explicit rendering strategy detected - defaulting to SSR');
-  return { strategy: 'SSR' as const, rationale };
 }
 
 function addDynamicSegmentInfo(
