@@ -28,7 +28,7 @@ export async function discoverAPIRoutes(
 
       return {
         path: file,
-        method: methods || [],
+        method: methods,
       };
     }),
   );

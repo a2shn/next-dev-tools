@@ -23,10 +23,10 @@ export function createFeatures(
     usesUnstableCache: false,
     hasFetchWithNoStore: false,
     hasFetchWithForceCache: false,
-    hasFetchWithRevalidate: false,
     isClientComponent: false,
     hasUseEffect: false,
     hasUseState: false,
+    hasUseLayoutEffect: false,
     ...overrides,
   };
 }

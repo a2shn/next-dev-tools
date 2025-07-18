@@ -29,7 +29,9 @@ export type OutgoingWsMessage<T> =
       error: string;
     };
 
-export type RouteInfo = string;
+export interface RouteInfo extends RoutingAnalysis {
+  path: string;
+}
 
 export interface AssetInfo {
   path: string;
@@ -91,6 +93,7 @@ export interface DynamicSegment {
 export interface PathAnalysis {
   isAppRouter: boolean;
   isPagesRouter: boolean;
+  isApiRoute: boolean;
   isDynamic: boolean;
   dynamicSegments: DynamicSegment[];
   routeType: 'page' | 'layout' | 'api' | 'middleware' | 'unknown';

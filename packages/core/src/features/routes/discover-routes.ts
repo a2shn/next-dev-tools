@@ -1,6 +1,9 @@
 import { glob } from 'tinyglobby';
 import type { RouteInfo } from '@next-dev-tools/shared/types';
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
+import { detectRoutingStrategy } from '@next-dev-tools/geist';
+import fs from 'fs/promises';
+import { join } from 'path';
 
 export async function discoverRoutes(
   rootDir: string = process.cwd(),
@@ -26,11 +29,26 @@ export async function discoverRoutes(
     'src/pages/**/*.{js,jsx,ts,tsx}',
   ];
 
-  const routes = await glob(routePatterns, {
+  const files = await glob(routePatterns, {
     cwd: rootDir,
     ignore: [...NEXTJS_IGNORE_PATTERNS, '**/api/**'],
     absolute: false,
   });
 
+  const routes = await Promise.all(
+    files.map(async (path) => {
+      const absolutePath = join(rootDir, path);
+      const source = await fs.readFile(absolutePath, 'utf8');
+      const { detectedFeatures, pathAnalysis, strategy, rationale } =
+        detectRoutingStrategy(source, path);
+      return {
+        path,
+        detectedFeatures,
+        pathAnalysis,
+        strategy,
+        rationale,
+      };
+    }),
+  );
   return routes;
 }
