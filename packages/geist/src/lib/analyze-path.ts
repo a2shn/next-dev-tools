@@ -5,6 +5,8 @@ import type {
 import { extname } from 'path';
 
 export function analyzePath(filePath: string): PathAnalysis {
+  filePath = filePath.startsWith('/') ? filePath : `/${filePath}`;
+
   const normalizedPath = filePath.replace(/\\/g, '/');
   const segments = normalizedPath.split('/').filter(Boolean);
   const file = segments[segments.length - 1];
@@ -104,6 +106,7 @@ export function analyzePath(filePath: string): PathAnalysis {
 
   return {
     isAppRouter,
+    isApiRoute,
     isPagesRouter,
     isDynamic,
     dynamicSegments,
