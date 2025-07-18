@@ -1,13 +1,11 @@
-import { glob } from 'tinyglobby';
-import type { RouteInfo } from '@next-dev-tools/shared/types';
-import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
-import { detectRoutingStrategy } from '@next-dev-tools/geist';
-import fs from 'fs/promises';
-import { join } from 'path';
+import type { RouteInfo } from '@next-dev-tools/shared/types'
+import fs from 'node:fs/promises'
+import { join } from 'node:path'
+import { detectRoutingStrategy } from '@next-dev-tools/geist'
+import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants'
+import { glob } from 'tinyglobby'
 
-export async function discoverRoutes(
-  rootDir: string = process.cwd(),
-): Promise<RouteInfo[]> {
+export async function discoverRoutes(rootDir: string): Promise<RouteInfo[]> {
   const routePatterns = [
     'app/**/page.{js,jsx,ts,tsx}',
     'src/app/**/page.{js,jsx,ts,tsx}',
@@ -27,28 +25,28 @@ export async function discoverRoutes(
     'src/middleware.{js,jsx,ts,tsx}',
     'pages/**/*.{js,jsx,ts,tsx}',
     'src/pages/**/*.{js,jsx,ts,tsx}',
-  ];
+  ]
 
   const files = await glob(routePatterns, {
     cwd: rootDir,
     ignore: [...NEXTJS_IGNORE_PATTERNS, '**/api/**'],
     absolute: false,
-  });
+  })
 
   const routes = await Promise.all(
     files.map(async (path) => {
-      const absolutePath = join(rootDir, path);
-      const source = await fs.readFile(absolutePath, 'utf8');
-      const { detectedFeatures, pathAnalysis, strategy, rationale } =
-        detectRoutingStrategy(source, path);
+      const absolutePath = join(rootDir, path)
+      const source = await fs.readFile(absolutePath, 'utf8')
+      const { detectedFeatures, pathAnalysis, strategy, rationale }
+        = detectRoutingStrategy(source, path)
       return {
         path,
         detectedFeatures,
         pathAnalysis,
         strategy,
         rationale,
-      };
+      }
     }),
-  );
-  return routes;
+  )
+  return routes
 }

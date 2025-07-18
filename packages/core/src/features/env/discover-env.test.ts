@@ -1,12 +1,12 @@
-import { it, expect, beforeAll, afterAll } from 'vitest';
-import { discoverEnv } from './discover-env';
 import {
   createDummyWithContent,
   deleteDummy,
   testDirPath,
-} from '@next-dev-tools/shared/test-utils';
+} from '@next-dev-tools/shared/test-utils'
+import { afterAll, beforeAll, expect, it } from 'vitest'
+import { discoverEnv } from './discover-env'
 
-const dir = 'env-test';
+const dir = 'env-test'
 
 beforeAll(() => {
   createDummyWithContent({
@@ -16,15 +16,15 @@ beforeAll(() => {
       '.env.local': 'LOCAL=test',
       'ignore.txt': 'should not be picked up',
     },
-  });
-});
+  })
+})
 
 afterAll(() => {
-  deleteDummy(dir);
-});
+  deleteDummy(dir)
+})
 
 it('discoverEnv finds and parses env files', async () => {
-  const result = await discoverEnv(testDirPath(dir));
+  const result = await discoverEnv(testDirPath(dir))
 
   expect(result).toEqual([
     {
@@ -35,5 +35,5 @@ it('discoverEnv finds and parses env files', async () => {
       path: '.env.local',
       content: { LOCAL: 'test' },
     },
-  ]);
-});
+  ])
+})

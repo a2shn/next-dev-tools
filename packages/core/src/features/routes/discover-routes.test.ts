@@ -1,14 +1,14 @@
-import { it, beforeAll, afterAll, expect } from 'vitest';
-import { discoverRoutes } from './discover-routes';
+import type { RouteInfo } from '@next-dev-tools/shared/types'
 import {
   createDummy,
   deleteDummy,
   testDirPath,
-} from '@next-dev-tools/shared/test-utils';
-import { RouteInfo } from '@next-dev-tools/shared/types';
+} from '@next-dev-tools/shared/test-utils'
+import { afterAll, beforeAll, expect, it } from 'vitest'
+import { discoverRoutes } from './discover-routes'
 
-let routes: RouteInfo[] = [];
-const testDirName = 'dummy-routes';
+let routes: RouteInfo[] = []
+const testDirName = 'dummy-routes'
 
 beforeAll(async () => {
   createDummy({
@@ -27,15 +27,15 @@ beforeAll(async () => {
       'src/pages/[[...optional]].tsx',
     ],
     dir: testDirName,
-  });
+  })
 
-  routes = await discoverRoutes(testDirPath(testDirName));
-});
+  routes = await discoverRoutes(testDirPath(testDirName))
+})
 
 afterAll(() => {
-  deleteDummy(testDirName);
-});
+  deleteDummy(testDirName)
+})
 
 it('discovers correct number of routes', async () => {
-  expect(routes.length).toBe(12);
-});
+  expect(routes.length).toBe(12)
+})

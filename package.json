@@ -5,12 +5,9 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "test": "vitest run",
-    "format": "prettier . --write"
+    "test": "vitest run"
   },
   "devDependencies": {
-    "prettier": "3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.13",
     "turbo": "^2.5.4",
     "typescript": "^5",
     "vitest": "^3.2.4"

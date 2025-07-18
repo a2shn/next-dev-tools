@@ -1,29 +1,29 @@
-export const POST = () => {
+export function POST() {
   return Response.json({
     hello: 'world',
-  });
-};
+  })
+}
 
 export function GET() {
   return Response.json({
     hello: 'world',
-  });
+  })
 }
 
-export const PUT = () => {
+export function PUT() {
   return Response.json({
     hello: 'world',
-  });
-};
+  })
+}
 
 export function OPTIONS() {
   return Response.json({
     hello: 'world',
-  });
+  })
 }
 
-export const DELETE = () => {
+export function DELETE() {
   return Response.json({
     hello: 'world',
-  });
-};
+  })
+}

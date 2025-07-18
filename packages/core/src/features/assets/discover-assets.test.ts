@@ -1,14 +1,14 @@
-import { beforeAll, afterAll, it, expect } from 'vitest';
-import { discoverAssets } from './discover-assets';
+import type { AssetInfo } from '@next-dev-tools/shared/types'
 import {
   createDummy,
   deleteDummy,
   testDirPath,
-} from '@next-dev-tools/shared/test-utils';
-import { AssetInfo } from '@next-dev-tools/shared/types';
+} from '@next-dev-tools/shared/test-utils'
+import { afterAll, beforeAll, expect, it } from 'vitest'
+import { discoverAssets } from './discover-assets'
 
-const testDirName = 'dummy-assets';
-let assets: AssetInfo[] = [];
+const testDirName = 'dummy-assets'
+let assets: AssetInfo[] = []
 
 beforeAll(async () => {
   createDummy({
@@ -28,19 +28,19 @@ beforeAll(async () => {
       'src/pages/icons/apple-touch-icon.tsx',
       'pages/images/banner.jpg',
     ],
-  });
-  assets = await discoverAssets(testDirPath(testDirName));
-});
+  })
+  assets = await discoverAssets(testDirPath(testDirName))
+})
 
 afterAll(() => {
-  deleteDummy(testDirName);
-});
+  deleteDummy(testDirName)
+})
 
 it('discovers all dummy assets with correct size', () => {
-  expect(assets.length).toBe(13);
+  expect(assets.length).toBe(13)
 
   for (const asset of assets) {
-    expect(typeof asset.size).toBe('number');
-    expect(asset.size).toBeGreaterThanOrEqual(0);
+    expect(typeof asset.size).toBe('number')
+    expect(asset.size).toBeGreaterThanOrEqual(0)
   }
-});
+})

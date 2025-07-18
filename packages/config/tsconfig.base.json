@@ -1,4 +1,4 @@
- {
+{
   "compilerOptions": {
     "esModuleInterop": true,
     "skipLibCheck": true,

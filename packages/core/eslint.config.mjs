@@ -1,3 +1,3 @@
-import { eslintConfigLib } from '@next-dev-tools/config/eslint.config.mjs';
+import { eslintConfigLib } from '@next-dev-tools/config/eslint.config.mjs'
 
-export default eslintConfigLib;
+export default eslintConfigLib
