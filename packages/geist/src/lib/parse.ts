@@ -1,5 +1,5 @@
-import * as parser from '@babel/parser';
-import type { File } from '@babel/types';
+import type { File } from '@babel/types'
+import * as parser from '@babel/parser'
 
 export function parse(code: string): parser.ParseResult<File> {
   return parser.parse(code, {
@@ -18,5 +18,5 @@ export function parse(code: string): parser.ParseResult<File> {
       'nullishCoalescingOperator',
       'optionalChaining',
     ],
-  });
+  })
 }

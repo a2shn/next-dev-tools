@@ -1,5 +1,5 @@
-import { detectRoutingStrategy } from '.';
-import { it, expect } from 'vitest';
+import { expect, it } from 'vitest'
+import { detectRoutingStrategy } from '.'
 
 const cases = [
   {
@@ -124,9 +124,9 @@ const cases = [
     `,
     expected: 'SSG',
   },
-] as const;
+] as const
 
 it.each(cases)('$filePath -> $expected', ({ filePath, code, expected }) => {
-  const result = detectRoutingStrategy(code, filePath);
-  expect(result.strategy).toBe(expected);
-});
+  const result = detectRoutingStrategy(code, filePath)
+  expect(result.strategy).toBe(expected)
+})

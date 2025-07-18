@@ -1,4 +1,4 @@
-import type { DetectedFeatures } from '@next-dev-tools/shared/types';
+import type { DetectedFeatures } from '@next-dev-tools/shared/types'
 
 export function createFeatures(
   overrides?: Partial<DetectedFeatures>,
@@ -28,5 +28,5 @@ export function createFeatures(
     hasUseState: false,
     hasUseLayoutEffect: false,
     ...overrides,
-  };
+  }
 }

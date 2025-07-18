@@ -1,8 +1,8 @@
-import { glob } from 'tinyglobby';
-import { stat } from 'fs/promises';
-import path from 'path';
-import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants';
-import type { AssetInfo } from '@next-dev-tools/shared/types';
+import type { AssetInfo } from '@next-dev-tools/shared/types'
+import { stat } from 'node:fs/promises'
+import path from 'node:path'
+import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants'
+import { glob } from 'tinyglobby'
 
 export async function discoverAssets(rootDir: string): Promise<AssetInfo[]> {
   const assetPatterns = [
@@ -25,27 +25,27 @@ export async function discoverAssets(rootDir: string): Promise<AssetInfo[]> {
     'pages/**/*.{jpg,jpeg,png,gif,svg,webp,ico,bmp,tiff,avif}',
     'src/pages/**/*.{jpg,jpeg,png,gif,svg,webp,ico,bmp,tiff,avif}',
     'src/pages/**/*icon*.{js,ts,tsx,jpg,jpeg,png,svg,webp,avif}',
-  ];
+  ]
 
   const files = await glob(assetPatterns, {
     ignore: NEXTJS_IGNORE_PATTERNS,
     dot: true,
     cwd: rootDir,
-  });
+  })
 
   const assets: AssetInfo[] = await Promise.all(
     files.map(async (filePath) => {
-      const fullPath = path.resolve(rootDir, filePath);
-      const stats = await stat(fullPath);
+      const fullPath = path.resolve(rootDir, filePath)
+      const stats = await stat(fullPath)
 
       const assetInfo: AssetInfo = {
         path: filePath,
         size: stats.size,
-      };
+      }
 
-      return assetInfo;
+      return assetInfo
     }),
-  );
+  )
 
-  return assets;
+  return assets
 }

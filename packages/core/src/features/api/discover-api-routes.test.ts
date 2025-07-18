@@ -1,14 +1,14 @@
-import { it, beforeAll, afterAll, expect } from 'vitest';
-import { discoverAPIRoutes } from './discover-api-routes';
+import type { APIRouteInfo } from '@next-dev-tools/shared/types'
 import {
   createDummyWithContent,
   deleteDummy,
   testDirPath,
-} from '@next-dev-tools/shared/test-utils';
-import { APIRouteInfo } from '@next-dev-tools/shared/types';
+} from '@next-dev-tools/shared/test-utils'
+import { afterAll, beforeAll, expect, it } from 'vitest'
+import { discoverAPIRoutes } from './discover-api-routes'
 
-let routes: APIRouteInfo[] = [];
-const testDirName = 'dummy-api-routes';
+let routes: APIRouteInfo[] = []
+const testDirName = 'dummy-api-routes'
 
 beforeAll(async () => {
   createDummyWithContent({
@@ -19,35 +19,36 @@ beforeAll(async () => {
       'app/api/users/[id]/route.ts': `export const PUT = () => new Response()`,
       'pages/api/users/[id].ts': `export default function handler(req, res) { res.status(200).end(); }`,
     },
-  });
+  })
 
-  routes = await discoverAPIRoutes(testDirPath(testDirName));
-});
+  routes = await discoverAPIRoutes(testDirPath(testDirName))
+})
 
 afterAll(() => {
-  deleteDummy(testDirName);
-});
+  deleteDummy(testDirName)
+})
 
 it('discovers correct number of API routes', () => {
-  expect(routes.length).toBe(4);
-});
+  expect(routes.length).toBe(4)
+})
 
 const expectedMethods = {
   'app/api/route.ts': ['GET'],
   'app/api/users/route.ts': ['POST'],
   'app/api/users/[id]/route.ts': ['PUT'],
   'pages/api/users/[id].ts': [],
-};
+}
 
 for (const [file, methods] of Object.entries(expectedMethods)) {
   it(`correctly detects methods for ${file}`, () => {
-    const route = routes.find((r) => r.path.endsWith(file));
-    expect(route).toBeDefined();
+    const route = routes.find(r => r.path.endsWith(file))
+    expect(route).toBeDefined()
 
     if (methods) {
-      expect(route!.method).toEqual(methods);
-    } else {
-      expect(route!.method).toBeUndefined();
+      expect(route!.method).toEqual(methods)
     }
-  });
+    else {
+      expect(route!.method).toBeUndefined()
+    }
+  })
 }

@@ -1,18 +1,18 @@
 import antfu from '@antfu/eslint-config';
 
-export const eslintConfigLib = antfu({
-  type: 'lib',
-  formatters: true,
+export const eslintConfigFlat = antfu({
 });
 
-export const eslintConfigReact = antfu({
+export const eslintConfigLib = antfu({
+  type: 'lib',
+});
+
+export const eslintConfigReactLib = antfu({
   type: 'lib',
   react: true,
-  formatters: true,
 });
 
 export const eslintConfigApp = antfu({
   type: 'app',
   react: true,
-  formatters: true,
 });
