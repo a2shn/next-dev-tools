@@ -1,9 +1,9 @@
 import type { APIRouteInfo } from '@next-dev-tools/shared/types'
-import fs from 'node:fs/promises'
 import path from 'node:path'
 import { detectAPIMethod } from '@next-dev-tools/geist'
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants'
 import { glob } from 'tinyglobby'
+import { withFileCache } from '@next-dev-tools/cache'
 
 export async function discoverAPIRoutes(
   rootDir: string,
@@ -23,15 +23,16 @@ export async function discoverAPIRoutes(
   const routes = await Promise.all(
     files.map(async (file) => {
       const absPath = path.join(rootDir, file)
-      const code = await fs.readFile(absPath, 'utf-8')
-      const methods = await detectAPIMethod(code)
+
+      const methods = await withFileCache(absPath, async (code) => {
+        return detectAPIMethod(code)
+      })
 
       return {
         path: file,
-        method: methods,
+        methods
       }
-    }),
-  )
+    }))
 
   return routes
 }

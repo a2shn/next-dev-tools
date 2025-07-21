@@ -45,10 +45,10 @@ for (const [file, methods] of Object.entries(expectedMethods)) {
     expect(route).toBeDefined()
 
     if (methods) {
-      expect(route!.method).toEqual(methods)
+      expect(route!.methods).toEqual(methods)
     }
     else {
-      expect(route!.method).toBeUndefined()
+      expect(route!.methods).toBeUndefined()
     }
   })
 }
