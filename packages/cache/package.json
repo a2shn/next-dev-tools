@@ -1,5 +1,5 @@
 {
-  "name": "@next-dev-tools/geist",
+  "name": "@next-dev-tools/cache",
   "type": "module",
   "version": "0.0.0",
   "main": "./index.ts",
@@ -8,16 +8,12 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "@babel/generator": "^7.28.0",
-    "@babel/parser": "^7.28.0",
-    "@babel/traverse": "^7.28.0",
-    "@babel/types": "^7.28.0",
-    "@next-dev-tools/shared": "workspace:*"
+    "lru-cache": "^11.1.0",
+    "@next-dev-tools/geist": "workspace:*"
   },
   "devDependencies": {
+    "@next-dev-tools/shared": "workspace:*",
     "@next-dev-tools/config": "workspace:*",
-    "@types/babel__generator": "^7.27.0",
-    "@types/babel__traverse": "^7.20.7",
     "@types/node": "^24.0.4",
     "eslint": "^9.29.0",
     "typescript": "^5.8.3"

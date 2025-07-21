@@ -58,6 +58,31 @@ importers:
         specifier: ^5
         version: 5.8.3
 
+  packages/cache:
+    dependencies:
+      '@next-dev-tools/geist':
+        specifier: workspace:*
+        version: link:../geist
+      lru-cache:
+        specifier: ^11.1.0
+        version: 11.1.0
+    devDependencies:
+      '@next-dev-tools/config':
+        specifier: workspace:*
+        version: link:../config
+      '@next-dev-tools/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@types/node':
+        specifier: ^24.0.4
+        version: 24.0.13
+      eslint:
+        specifier: ^9.29.0
+        version: 9.30.1(jiti@2.4.2)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
   packages/config:
     devDependencies:
       '@antfu/eslint-config':
@@ -81,6 +106,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@next-dev-tools/cache':
+        specifier: workspace:*
+        version: link:../cache
       '@next-dev-tools/geist':
         specifier: workspace:*
         version: link:../geist
@@ -124,6 +152,9 @@ importers:
 
   packages/geist:
     dependencies:
+      '@babel/generator':
+        specifier: ^7.28.0
+        version: 7.28.0
       '@babel/parser':
         specifier: ^7.28.0
         version: 7.28.0
@@ -140,6 +171,9 @@ importers:
       '@next-dev-tools/config':
         specifier: workspace:*
         version: link:../config
+      '@types/babel__generator':
+        specifier: ^7.27.0
+        version: 7.27.0
       '@types/babel__traverse':
         specifier: ^7.20.7
         version: 7.20.7
@@ -980,6 +1014,9 @@ packages:
 
   '@tailwindcss/postcss@4.1.11':
     resolution: {integrity: sha512-q/EAIIpF6WpLhKEuQSEVMZNMIY8KhWoAemZ9eylNAih9jxMGAYPPWBn3I9QL/2jZ+e7OEz/tZkX5HwbBR4HohA==}
+
+  '@types/babel__generator@7.27.0':
+    resolution: {integrity: sha512-ufFd2Xi92OAVPYsy+P4n7/U7e68fex0+Ee8gSG9KX7eo084CWiQ4sdxktvdl0bOPupXtVJPY19zk6EwWqUQ8lg==}
 
   '@types/babel__traverse@7.20.7':
     resolution: {integrity: sha512-dkO5fhS7+/oos4ciWxyEyjWe48zmG6wbCheo/G2ZnHx4fs3EU6YC6UM8rk56gAjNJ9P3MTH2jo5jb92/K6wbng==}
@@ -2012,6 +2049,10 @@ packages:
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
+
+  lru-cache@11.1.0:
+    resolution: {integrity: sha512-QIXZUBJUx+2zHUdQujWejBkcD9+cs94tLn0+YL8UrCh+D5sCXZ4c7LaEH48pNwRY3MLDgqUFyhlCyjJPf1WP0A==}
+    engines: {node: 20 || >=22}
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
@@ -3572,6 +3613,10 @@ snapshots:
       postcss: 8.5.6
       tailwindcss: 4.1.11
 
+  '@types/babel__generator@7.27.0':
+    dependencies:
+      '@babel/types': 7.28.0
+
   '@types/babel__traverse@7.20.7':
     dependencies:
       '@babel/types': 7.28.0
@@ -4716,6 +4761,8 @@ snapshots:
   loupe@3.1.4: {}
 
   lru-cache@10.4.3: {}
+
+  lru-cache@11.1.0: {}
 
   magic-string@0.30.17:
     dependencies:

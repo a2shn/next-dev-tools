@@ -1,9 +1,9 @@
 import type { RouteInfo } from '@next-dev-tools/shared/types'
-import fs from 'node:fs/promises'
 import { join } from 'node:path'
 import { detectRoutingStrategy } from '@next-dev-tools/geist'
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants'
 import { glob } from 'tinyglobby'
+import { withFileCache } from '@next-dev-tools/cache'
 
 export async function discoverRoutes(rootDir: string): Promise<RouteInfo[]> {
   const routePatterns = [
@@ -32,21 +32,24 @@ export async function discoverRoutes(rootDir: string): Promise<RouteInfo[]> {
     ignore: [...NEXTJS_IGNORE_PATTERNS, '**/api/**'],
     absolute: false,
   })
-
   const routes = await Promise.all(
-    files.map(async (path) => {
-      const absolutePath = join(rootDir, path)
-      const source = await fs.readFile(absolutePath, 'utf8')
-      const { detectedFeatures, pathAnalysis, strategy, rationale }
-        = detectRoutingStrategy(source, path)
+    files.map(async (file) => {
+      const absolutePath = join(rootDir, file)
+
+      const { detectedFeatures, pathAnalysis, strategy, rationale } =
+        await withFileCache(absolutePath, async (code) => {
+          return detectRoutingStrategy(code, file)
+        })
+
       return {
-        path,
+        path: file,
         detectedFeatures,
         pathAnalysis,
         strategy,
         rationale,
       }
-    }),
+    })
   )
+
   return routes
 }
