@@ -1,9 +1,9 @@
 import type { APIRouteInfo } from '@next-dev-tools/shared/types'
 import path from 'node:path'
+import { withFileCache } from '@next-dev-tools/cache'
 import { detectAPIMethod } from '@next-dev-tools/geist'
 import { NEXTJS_IGNORE_PATTERNS } from '@next-dev-tools/shared/constants'
 import { glob } from 'tinyglobby'
-import { withFileCache } from '@next-dev-tools/cache'
 
 export async function discoverAPIRoutes(
   rootDir: string,
@@ -30,9 +30,10 @@ export async function discoverAPIRoutes(
 
       return {
         path: file,
-        methods
+        methods,
       }
-    }))
+    }),
+  )
 
   return routes
 }

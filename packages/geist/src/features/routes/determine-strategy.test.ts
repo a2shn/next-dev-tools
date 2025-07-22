@@ -10,6 +10,7 @@ function createPathAnalysis(
   overrides: Partial<PathAnalysis> = {},
 ): PathAnalysis {
   return {
+    isApiRoute: false,
     isAppRouter: false,
     isPagesRouter: false,
     isDynamic: false,

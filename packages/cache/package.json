@@ -8,12 +8,12 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "lru-cache": "^11.1.0",
-    "@next-dev-tools/geist": "workspace:*"
+    "@next-dev-tools/geist": "workspace:*",
+    "lru-cache": "^11.1.0"
   },
   "devDependencies": {
-    "@next-dev-tools/shared": "workspace:*",
     "@next-dev-tools/config": "workspace:*",
+    "@next-dev-tools/shared": "workspace:*",
     "@types/node": "^24.0.4",
     "eslint": "^9.29.0",
     "typescript": "^5.8.3"

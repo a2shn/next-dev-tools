@@ -1,12 +1,12 @@
-import { generate } from "@babel/generator"
-import { parse } from "../../lib/parse"
+import { generate } from '@babel/generator'
+import { parse } from '../../lib/parse'
 
-export function minify(code: string) {
+export function minify(code: string): string {
   const ast = parse(code)
 
   return generate(ast, {
     minified: true,
     comments: false,
-    concise: true
+    concise: true,
   }).code
 }

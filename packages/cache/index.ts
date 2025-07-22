@@ -1,1 +1,1 @@
-export * from "./src/with-file-cache"
+export * from './src/with-file-cache'

@@ -1,12 +1,12 @@
-import fs from 'fs'
-import path from 'path'
-import { expect, it, beforeEach, afterEach, vi } from 'vitest'
-import { __clear, withFileCache } from './with-file-cache'
+import fs from 'node:fs'
+import path from 'node:path'
 import {
   createDummyWithContent,
   deleteDummy,
   testDirPath,
 } from '@next-dev-tools/shared/test-utils'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import { __clear, withFileCache } from './with-file-cache'
 
 const dir = 'withFileCache-test'
 const fileName = 'api/hello.ts'
@@ -53,9 +53,7 @@ it('throws if file does not exist', async () => {
 })
 
 it('does not cache result if compute throws', async () => {
-  let calls = 0
   const compute = vi.fn(async () => {
-    calls++
     throw new Error('fail')
   })
 
@@ -77,4 +75,3 @@ it('caches large file content correctly', async () => {
   expect(result2).toEqual(['large'])
   expect(compute).toHaveBeenCalledTimes(1)
 })
-

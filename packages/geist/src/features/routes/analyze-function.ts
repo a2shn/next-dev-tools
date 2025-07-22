@@ -5,7 +5,7 @@ import { analyzeObject } from './analyze-object'
 export function analyzeFunction(
   node: t.CallExpression,
   features: DetectedFeatures,
-) {
+): void {
   if (t.isIdentifier(node.callee)) {
     const name = node.callee.name
     if (name === 'useLayoutEffect')
@@ -47,7 +47,7 @@ export function analyzeFunction(
 export function analyzeFetchCall(
   node: t.CallExpression,
   features: DetectedFeatures,
-) {
+): void {
   if (node.arguments.length > 1) {
     const options = node.arguments[1]
     if (t.isObjectExpression(options)) {

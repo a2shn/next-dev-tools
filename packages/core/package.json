@@ -16,9 +16,9 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@next-dev-tools/cache": "workspace:*",
     "@next-dev-tools/geist": "workspace:*",
     "@next-dev-tools/shared": "workspace:*",
-    "@next-dev-tools/cache": "workspace:*",
     "consola": "^3.4.2",
     "envfile": "^7.1.0",
     "next": "15.3.4",
