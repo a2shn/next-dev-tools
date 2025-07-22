@@ -5,7 +5,7 @@ export interface IncomingWsMessage {
   action:
   | 'updateEnv'
   | 'discoverEnv'
-  | 'discoverApi'
+  | 'discoverApiRoutes'
   | 'discoverAssets'
   | 'discoverRoutes'
   | 'readPackageJson';
@@ -98,4 +98,9 @@ export interface PathAnalysis {
   dynamicSegments: DynamicSegment[];
   routeType: 'page' | 'layout' | 'api' | 'middleware' | 'unknown';
   segments: string[];
+}
+
+export interface RoutingStrategyResult {
+  strategy: 'SSR' | 'SSG' | 'ISR',
+  rationale: string[]
 }

@@ -4,7 +4,7 @@ import * as t from '@babel/types'
 export function analyzeImports(
   node: t.ImportDeclaration,
   features: DetectedFeatures,
-) {
+): void {
   const source = node.source.value
 
   if (source === 'next/headers' || source === 'next/cookies') {

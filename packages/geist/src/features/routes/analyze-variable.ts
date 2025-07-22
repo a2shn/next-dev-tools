@@ -4,7 +4,7 @@ import * as t from '@babel/types'
 export function analyzeVariable(
   node: t.VariableDeclaration,
   features: DetectedFeatures,
-) {
+): void {
   node.declarations.forEach((decl) => {
     if (t.isIdentifier(decl.id)) {
       const name = decl.id.name

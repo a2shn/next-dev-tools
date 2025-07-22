@@ -4,7 +4,7 @@ import * as t from '@babel/types'
 export function analyzeObject(
   node: t.ObjectExpression,
   features: DetectedFeatures,
-) {
+): void {
   node.properties.forEach((prop) => {
     if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
       const key = prop.key.name

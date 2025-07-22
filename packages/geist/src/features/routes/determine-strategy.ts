@@ -1,13 +1,14 @@
 import type {
   DetectedFeatures,
-  DynamicSegment,
   PathAnalysis,
+  RoutingStrategyResult,
 } from '@next-dev-tools/shared/types'
+import { addDynamicSegmentInfo } from '../../lib/utils'
 
 export function determineStrategy(
   features: DetectedFeatures,
   pathAnalysis: PathAnalysis,
-) {
+): RoutingStrategyResult {
   const rationale: string[] = []
 
   if (pathAnalysis.routeType === 'middleware') {
@@ -97,7 +98,7 @@ function determinePagesRouterStrategy(
   features: DetectedFeatures,
   pathAnalysis: PathAnalysis,
   rationale: string[],
-) {
+): RoutingStrategyResult {
   if (features.hasGetServerSideProps) {
     rationale.push('getServerSideProps detected')
     addDynamicSegmentInfo(pathAnalysis.dynamicSegments, rationale)
@@ -183,7 +184,7 @@ function determineAppRouterStrategy(
   features: DetectedFeatures,
   pathAnalysis: PathAnalysis,
   rationale: string[],
-) {
+): RoutingStrategyResult {
   if (features.isClientComponent) {
     return determineClientComponentStrategy(features, pathAnalysis, rationale)
   }
@@ -309,7 +310,7 @@ function determineClientComponentStrategy(
   features: DetectedFeatures,
   pathAnalysis: PathAnalysis,
   rationale: string[],
-) {
+): RoutingStrategyResult {
   rationale.push('Client component detected')
 
   if (features.hasUseEffect || features.hasUseState) {
@@ -342,39 +343,6 @@ function determineClientComponentStrategy(
   }
 
   return { strategy: 'SSG' as const, rationale }
-}
-
-function addDynamicSegmentInfo(
-  segments: DynamicSegment[],
-  rationale: string[],
-  context?: string,
-) {
-  if (segments.length === 0)
-    return
-
-  const segmentDescriptions = segments.map((seg) => {
-    let desc = seg.segment
-    if (seg.catchAll && seg.optional) {
-      desc = `...${seg.segment}? (optional catch-all)`
-    }
-    else if (seg.catchAll) {
-      desc = `...${seg.segment} (catch-all)`
-    }
-    else if (seg.optional) {
-      desc = `${seg.segment}? (optional)`
-    }
-
-    if (seg.isFilename) {
-      desc += ' (filename)'
-    }
-
-    return desc
-  })
-
-  const contextSuffix = context ? ` ${context}` : ''
-  rationale.push(
-    `Dynamic segments: ${segmentDescriptions.join(', ')}${contextSuffix}`,
-  )
 }
 
 function hasStaticGeneration(features: DetectedFeatures): boolean {

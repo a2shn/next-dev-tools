@@ -1,14 +1,14 @@
-import fs from 'fs/promises'
-import { LRUCache } from 'lru-cache'
-import { createHash } from 'crypto'
+import { createHash } from 'node:crypto'
+import fs from 'node:fs/promises'
 import { minify } from '@next-dev-tools/geist'
+import { LRUCache } from 'lru-cache'
 
 const cache = new LRUCache<
   string,
-  { hash: string; data: unknown }
+  { hash: string, data: unknown }
 >({
   max: 1000,
-  ttl: 1000 * 60 * 10
+  ttl: 1000 * 60 * 10,
 })
 
 function checksum(input: string): string {
@@ -16,7 +16,7 @@ function checksum(input: string): string {
 }
 export async function withFileCache<T>(
   absPath: string,
-  compute: (code: string) => Promise<T>
+  compute: (code: string) => Promise<T>,
 ): Promise<T> {
   const rawCode = await fs.readFile(absPath, 'utf-8')
   const minified = minify(rawCode)
@@ -32,6 +32,6 @@ export async function withFileCache<T>(
   return result
 }
 
-export function __clear() {
+export function __clear(): void {
   cache.clear()
 }
