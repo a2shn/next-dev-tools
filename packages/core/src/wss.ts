@@ -1,9 +1,14 @@
 import type { IncomingWsMessage } from '@next-dev-tools/shared/types'
 import { WSS_PORT } from '@next-dev-tools/shared/constants'
 import { consola } from 'consola'
+import Watcher from 'watcher'
 import { WebSocketServer } from 'ws'
 import { handleAction } from './handle-action'
 import { respond } from './lib/utils'
+import process from "node:process"
+
+export const WatchFS: typeof Watcher
+  = (Watcher as any).default || Watcher
 
 export async function Wss(): Promise<WebSocketServer> {
   const port = WSS_PORT
@@ -16,6 +21,14 @@ export async function Wss(): Promise<WebSocketServer> {
   wss.on('connection', (ws, req) => {
     const clientIP = req.socket.remoteAddress
     consola.success(`[DEVTOOLS] 🚀 Client connected from ${clientIP}`)
+    const watcher = new WatchFS(process.cwd())
+
+    watcher.on('all', () => {
+      ws.send('change', {}, (err) => {
+        if (err)
+          consola.error(new Error(`[DEVTOOLS] WebSocket error: ${err.message}`))
+      })
+    })
 
     ws.on('message', async (data) => {
       try {
@@ -43,6 +56,19 @@ export async function Wss(): Promise<WebSocketServer> {
 
     ws.on('close', () => {
       consola.warn('[DEVTOOLS] 🔌 Client disconnected')
+    })
+
+    watcher.on('error', (err) => {
+      consola.error(new Error(`[DEVTOOLS] filesystem error: ${err.message}`))
+      respond(ws, {
+        success: false,
+        error: err.message,
+        payload: [],
+      })
+    })
+
+    watcher.on('ready', () => {
+      consola.start('[DEVTOOLS] watching for changes ...')
     })
   })
 
