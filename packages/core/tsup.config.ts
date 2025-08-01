@@ -1,5 +1,5 @@
-import { dirname, resolve } from 'node:path'
 import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
 import { consola } from 'consola'
 import { defineConfig } from 'tsup'
 import pkg from './package.json' with { type: 'json' }
@@ -26,7 +26,8 @@ function getExternalDepsFromWorkspaces(pkgPath: string): string[] {
           consola.info(`[WORKSPACE] Visiting ${depPath}`)
           collectExternals(depPath)
         }
-      } else {
+      }
+      else {
         consola.info(`[EXTERNAL] Adding "${depName}"`)
         externals.add(depName)
       }
@@ -56,4 +57,3 @@ export default defineConfig({
     name.startsWith('@next-dev-tools'),
   ),
 })
-
