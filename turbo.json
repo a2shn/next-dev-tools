@@ -11,8 +11,7 @@
       "cache": false
     },
     "lint": {
-      "cache": false,
-      "dependsOn": ["^lint"]
+      "cache": false
     },
     "test": {
       "cache": false
