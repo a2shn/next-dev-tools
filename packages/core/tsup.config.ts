@@ -1,6 +1,6 @@
-import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
-
+import { readFileSync } from 'node:fs'
+import { consola } from 'consola'
 import { defineConfig } from 'tsup'
 import pkg from './package.json' with { type: 'json' }
 
@@ -20,22 +20,28 @@ function getExternalDepsFromWorkspaces(pkgPath: string): string[] {
           depName.replace('@next-dev-tools/', 'packages/'),
           'package.json',
         )
+
         if (!visited.has(depPath)) {
           visited.add(depPath)
+          consola.info(`[WORKSPACE] Visiting ${depPath}`)
           collectExternals(depPath)
         }
-      }
-      else {
+      } else {
+        consola.info(`[EXTERNAL] Adding "${depName}"`)
         externals.add(depName)
       }
     }
   }
 
+  consola.start('Collecting external dependencies from workspaces...')
   collectExternals(resolve(pkgPath))
   return Array.from(externals)
 }
 
-console.log(getExternalDepsFromWorkspaces('./package.json'))
+const collectedExternals = getExternalDepsFromWorkspaces('./package.json')
+
+consola.success(`Collected ${collectedExternals.length} external dependencies:`)
+collectedExternals.forEach(dep => consola.log(`  • ${dep}`))
 
 export default defineConfig({
   outDir: 'dist',
@@ -49,5 +55,5 @@ export default defineConfig({
   noExternal: Object.keys(pkg.dependencies ?? {}).filter(name =>
     name.startsWith('@next-dev-tools'),
   ),
-  external: getExternalDepsFromWorkspaces('./package.json'),
 })
+
