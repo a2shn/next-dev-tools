@@ -12,6 +12,6 @@
     "module": "ESNext",
     "noEmit": true,
     "moduleResolution": "Bundler",
-    "lib": ["es2022"]
+    "lib": ["es2022", "DOM", "DOM.Iterable"]
   }
 }

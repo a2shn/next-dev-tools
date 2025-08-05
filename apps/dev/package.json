@@ -1,0 +1,23 @@
+{
+  "name": "dev",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -H localhost",
+    "lint": "eslint . --fix"
+  },
+  "dependencies": {
+    "@next-dev-tools/client": "workspace:*",
+    "@next-dev-tools/config": "workspace:*",
+    "next": "15.4.5",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9.29.0",
+    "typescript": "^5"
+  }
+}

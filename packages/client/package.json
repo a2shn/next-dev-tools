@@ -1,0 +1,23 @@
+{
+  "name": "@next-dev-tools/client",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "lint": "eslint . --fix"
+  },
+  "peerDependencies": {
+    "next": "^15.3.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@next-dev-tools/config": "workspace:*",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "eslint": "^9.29.0",
+    "typescript": "~5.8.3"
+  }
+}
