@@ -13,6 +13,12 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
+  "dependencies": {
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "react-shadow-scope": "^2.0.3"
+  },
   "devDependencies": {
     "@next-dev-tools/config": "workspace:*",
     "@types/react": "^19.1.8",
