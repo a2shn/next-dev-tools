@@ -1,7 +1,10 @@
 {
   "extends": "@next-dev-tools/config/tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }
